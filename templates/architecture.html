@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}AWS Cloud Technical Architecture - MedTrack{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3.5rem 0 5rem;">
+
+  <!-- Header -->
+  <div style="text-align: center; max-width: 800px; margin: 0 auto 3.5rem;">
+    <span class="aws-badge local" style="margin-bottom: 1rem; display: inline-flex;">
+      ☁ AWS Cloud-Enabled Healthcare Management System
+    </span>
+    <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.75rem;">
+      System Architecture & Course Blueprint
+    </h1>
+    <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+      Comprehensive technical breakdown of MedTrack's infrastructure on Amazon Web Services, detailing VPC topology, IAM policies, DynamoDB document modeling, and SNS notification pipelines.
+    </p>
+  </div>
+
+  <!-- Interactive Cloud Topology Diagram Card -->
+  <div class="card" style="margin-bottom: 3.5rem; padding: 2rem; border-color: rgba(14, 165, 233, 0.3); background: rgba(10, 15, 29, 0.9);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--primary); font-weight: 700;">CLOUD SCHEMATIC</span>
+        <h2 style="font-size: 1.4rem;">End-to-End AWS System Topology</h2>
+      </div>
+      <div class="aws-badge {{ 'live' if use_aws else 'local' }}">
+        Status: {{ "AWS Connected" if use_aws else "Dual-Mode (Ready for AWS Credits)" }}
+      </div>
+    </div>
+
+    <!-- Visual Architecture Layout -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 1rem;">
+      
+      <!-- Tier 1: Client & DNS -->
+      <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.25rem;">
+        <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 0.5rem;">TIER 1: CLIENT & ROUTING</div>
+        <h4 style="color: #38bdf8; margin-bottom: 0.75rem;">Amazon Route 53</h4>
+        <ul style="font-size: 0.82rem; color: #cbd5e1; list-style: none; display: flex; flex-direction: column; gap: 0.4rem;">
+          <li>🌐 Route 53 DNS Latency Routing</li>
+          <li>🛡 SSL/TLS Encryption (HTTPS)</li>
+          <li>🚪 AWS VPC Internet Gateway</li>
+        </ul>
+      </div>
+
+      <!-- Tier 2: Compute -->
+      <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.25rem;">
+        <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 0.5rem;">TIER 2: HOSTING & BACKEND</div>
+        <h4 style="color: var(--accent-teal); margin-bottom: 0.75rem;">Amazon EC2</h4>
+        <ul style="font-size: 0.82rem; color: #cbd5e1; list-style: none; display: flex; flex-direction: column; gap: 0.4rem;">
+          <li>🐧 Amazon Linux 2023 AMI</li>
+          <li>⚡ Nginx Reverse Proxy (Port 80/443)</li>
+          <li>🐍 Gunicorn WSGI Python 3 Server</li>
+          <li>🔒 Security Group (Ports 22, 80, 443)</li>
+        </ul>
+      </div>
+
+      <!-- Tier 3: Database & Storage -->
+      <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.25rem;">
+        <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 0.5rem;">TIER 3: DATA PERSISTENCE</div>
+        <h4 style="color: #a78bfa; margin-bottom: 0.75rem;">DynamoDB & S3</h4>
+        <ul style="font-size: 0.82rem; color: #cbd5e1; list-style: none; display: flex; flex-direction: column; gap: 0.4rem;">
+          <li>⚡ <code>MedTrack_Patients</code> (PK: PatientID)</li>
+          <li>⚡ <code>MedTrack_Doctors</code> (PK: DoctorID)</li>
+          <li>⚡ <code>MedTrack_Appointments</code> (PK: AppointmentID)</li>
+          <li>⚡ <code>MedTrack_Diagnoses</code> (PK: DiagnosisID)</li>
+          <li>📦 S3 Bucket: Medical Scans & PDFs</li>
+        </ul>
+      </div>
+
+      <!-- Tier 4: Security & Messaging -->
+      <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.25rem;">
+        <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 0.5rem;">TIER 4: NOTIFICATIONS & AUDIT</div>
+        <h4 style="color: #fbbf24; margin-bottom: 0.75rem;">AWS SNS & CloudWatch</h4>
+        <ul style="font-size: 0.82rem; color: #cbd5e1; list-style: none; display: flex; flex-direction: column; gap: 0.4rem;">
+          <li>📡 SNS Appointment Confirmation Topic</li>
+          <li>📡 SNS Diagnosis Alert Topic</li>
+          <li>📊 CloudWatch Application Metrics</li>
+          <li>🛡 IAM Role: Least-Privilege Execution</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Entity-Relationship (ER) Diagram & Logical Data Model Card -->
+  <div class="card" style="margin-bottom: 3.5rem; padding: 2rem; border-color: rgba(220, 38, 38, 0.3); background: #ffffff;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--primary); font-weight: 700;">DATABASE SCHEMA</span>
+        <h2 style="font-size: 1.5rem; color: var(--text-main); margin-top: 0.25rem;">MedTrack Entity-Relationship (ER) Diagram</h2>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <a href="{{ url_for('static', filename='img/medtrack_er_diagram.svg') }}" target="_blank" class="btn btn-outline btn-sm">
+          🔍 View Vector SVG
+        </a>
+        <a href="{{ url_for('static', filename='img/medtrack_er_diagram.jpg') }}" download class="btn btn-primary btn-sm">
+          📥 Download Image
+        </a>
+      </div>
+    </div>
+
+    <!-- ER Diagram Image Display -->
+    <div style="background: #ffffff; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.5rem; text-align: center; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+      <img src="{{ url_for('static', filename='img/medtrack_er_diagram.jpg') }}" alt="MedTrack Entity-Relationship Diagram" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+    </div>
+
+    <!-- Entity & Cardinality Overview Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+      <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 0.35rem;">👤 Users Entity</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;"><code>(UserID, Name, Email, Role, Password, Phone)</code></p>
+        <span style="font-size: 0.75rem; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; font-weight: 600;">1:N to Doctors, Patients, Notifications</span>
+      </div>
+
+      <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 0.35rem;">🩺 Doctors Entity</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;"><code>(DoctorID, UserID, Specialization, Experience)</code></p>
+        <span style="font-size: 0.75rem; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; font-weight: 600;">1:N to Appointments</span>
+      </div>
+
+      <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 0.35rem;">🧑‍🤝‍🧑 Patients Entity</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;"><code>(PatientID, UserID, Age, MedicalHistory)</code></p>
+        <span style="font-size: 0.75rem; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; font-weight: 600;">1:N to Appointments</span>
+      </div>
+
+      <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 0.35rem;">📅 Appointments Entity</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;"><code>(AppointmentID, PatientID, DoctorID, Date, Time, Status)</code></p>
+        <span style="font-size: 0.75rem; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; font-weight: 600;">1:1 with Diagnosis</span>
+      </div>
+
+      <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 0.35rem;">📝 Diagnosis Entity</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;"><code>(DiagnosisID, AppointmentID, DoctorID, PatientID, Report, Date)</code></p>
+        <span style="font-size: 0.75rem; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Linked 1:1 to Completed Appointment</span>
+      </div>
+
+      <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 0.35rem;">🔔 Notifications Entity</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;"><code>(NotificationID, UserID, Message, Timestamp)</code></p>
+        <span style="font-size: 0.75rem; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Event-driven User Alerts</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Module Mapping (The 8 Instructions) -->
+  <div style="margin-bottom: 3rem;">
+    <h2 style="font-size: 1.7rem; margin-bottom: 1.5rem;">Implementation Guide for Course Mentors</h2>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+      
+      <!-- 1 & 2 -->
+      <div class="card">
+        <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 0.5rem;">1. Environment & Cloud Configuration</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          Configured with Flask 3+, Boto3 SDK, python-dotenv, and Gunicorn. Supports instant credential loading via <code>.env</code> with support for standard IAM access keys and AWS Academy session tokens.
+        </p>
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-teal);">
+          Files: <code>config.py</code>, <code>services/aws_client.py</code>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 0.5rem;">2. Cloud Database (Amazon DynamoDB)</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          Four decoupled DynamoDB tables with partitioned keys (<code>PatientID</code>, <code>DoctorID</code>, <code>AppointmentID</code>, <code>DiagnosisID</code>) delivering sub-millisecond retrieval with secondary scan filters.
+        </p>
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-teal);">
+          Files: <code>services/db_service.py</code>, <code>deploy/dynamodb_setup.py</code>
+        </div>
+      </div>
+
+      <!-- 3 & 4 -->
+      <div class="card">
+        <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 0.5rem;">3. Flask Application Core Workflows</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          Complete user journeys: Patient self-registration, Doctor clinical access, interactive scheduling with physician slot availability, and clinical diagnosis entry with medical prescription builder.
+        </p>
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-teal);">
+          Files: <code>app.py</code>, <code>templates/</code>, <code>static/</code>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 0.5rem;">4. Cloud Notifications (AWS SNS)</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          Dispatches automated event messages upon appointment booking and diagnosis release. Real-time bell modal in the UI displays published notification events with message attributes.
+        </p>
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-teal);">
+          Files: <code>services/sns_service.py</code>
+        </div>
+      </div>
+
+      <!-- 5 & 6 -->
+      <div class="card">
+        <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 0.5rem;">5. Secure Access Control with IAM</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          Granular role separation between Patients and Clinicians. Pre-crafted IAM policy JSON grants least-privilege permissions targeting only MedTrack DynamoDB tables and SNS topics.
+        </p>
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-teal);">
+          Files: <code>deploy/iam_policies.json</code>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 0.5rem;">6. Production Deployment on AWS EC2</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          Includes Nginx reverse-proxy setup, Gunicorn WSGI configuration, systemd daemon service, and automated <code>setup_ec2.sh</code> shell script ready for Amazon Linux 2023.
+        </p>
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-teal);">
+          Files: <code>deploy/nginx.conf</code>, <code>deploy/medtrack.service</code>, <code>deploy/setup_ec2.sh</code>
+        </div>
+      </div>
+
+      <!-- 7 & 8 -->
+      <div class="card">
+        <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 0.5rem;">7. Testing & Verification</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          Integrated demo logins, sample records, and instant appointment booking and diagnosis test cycles to simulate real-world patient-doctor interaction without external dependencies.
+        </p>
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-teal);">
+          Ready: 1-click test fill on login page
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 0.5rem;">8. Monitoring & Optimization (CloudWatch)</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          Emits custom CloudWatch application metrics (<code>APPOINTMENT_BOOKED</code>, <code>DIAGNOSIS_SUBMITTED</code>, <code>USER_LOGIN</code>) and writes immutable security audit logs to <code>data/audit_trail.jsonl</code>.
+        </p>
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-teal);">
+          Files: <code>services/cloudwatch_logger.py</code>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- How to Connect AWS When Credits Arrive -->
+  <div class="card" style="background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(20,184,166,0.1)); border-color: rgba(20, 184, 166, 0.3);">
+    <h3 style="font-size: 1.35rem; color: var(--accent-teal); margin-bottom: 0.5rem;">
+      Ready for AWS Credits: 3 Steps to Go Live
+    </h3>
+    <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.25rem;">
+      When you receive your AWS student/lab credits, you do not need to change a single line of application code. Simply follow these three steps:
+    </p>
+    <ol style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem; color: #cbd5e1;">
+      <li>
+        <strong>Create DynamoDB Tables:</strong> Run <code>python deploy/dynamodb_setup.py</code> using your AWS credentials to automatically create the 4 tables in your AWS Region.
+      </li>
+      <li>
+        <strong>Configure <code>.env</code>:</strong> Set <code>USE_AWS=True</code> and enter your <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, and <code>AWS_REGION</code>.
+      </li>
+      <li>
+        <strong>Run or Deploy:</strong> Start the Flask server locally or execute <code>deploy/setup_ec2.sh</code> on your EC2 instance. The application immediately reads and writes to live AWS services!
+      </li>
+    </ol>
+  </div>
+
+</div>
+{% endblock %}

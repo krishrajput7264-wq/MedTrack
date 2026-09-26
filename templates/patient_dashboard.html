@@ -1,0 +1,541 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Portal - MedTrack{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-bottom: 4rem;">
+
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="dashboard-title">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+        <h1>Patient Portal</h1>
+        <span class="status-badge" style="font-size: 0.78rem; font-family: var(--font-mono); font-weight: 700;">
+          ID: {{ patient.PatientID }}
+        </span>
+      </div>
+      <div class="dashboard-subtitle">
+        Welcome, <strong style="color: var(--text-main);">{{ patient.FullName }}</strong> • Blood Group: <span style="color: var(--primary); font-weight: 700;">{{ patient.BloodGroup or 'N/A' }}</span> • DOB: {{ patient.DateOfBirth }}
+      </div>
+    </div>
+    <div class="dashboard-actions">
+      <button class="btn btn-secondary" data-modal-target="logVitalsModal">
+        🩺 Log Today's Vitals
+      </button>
+      <button class="btn btn-primary" data-modal-target="bookApptModal">
+        ➕ Book New Appointment
+      </button>
+    </div>
+  </div>
+
+  <!-- Medical Alerts Bar if allergies/conditions exist -->
+  {% if patient.Allergies and patient.Allergies != 'None' and patient.Allergies != 'None reported' %}
+    <div style="background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: var(--radius-sm); padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.85rem;">
+      <span style="color: var(--danger); font-size: 1.3rem;">⚠️</span>
+      <div style="font-size: 0.92rem;">
+        <strong style="color: var(--danger);">Critical Allergy Alert:</strong> {{ patient.Allergies }}
+        {% if patient.ChronicConditions and patient.ChronicConditions != 'None reported' %}
+          • <span style="color: var(--text-muted);">Chronic: {{ patient.ChronicConditions }}</span>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Indian Emergency Helpline Bar (Preserves test expectation) -->
+  <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.65rem 1rem; margin-bottom: 1.75rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; flex-wrap: wrap; gap: 0.5rem;">
+    <span>🚨 <strong>Emergency Medical Assistance in Pune & India:</strong> Call <strong>108</strong> (Ambulance) or <strong>112</strong> (National Helpline)</span>
+    <span style="color: var(--text-muted);">MedTrack Rapid Care Integration</span>
+  </div>
+
+  <!-- Vitals Tracker Grid -->
+  <div style="margin-bottom: 1.75rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+      <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+        <span>📈</span> Patient Health Vitals Tracker
+      </h3>
+      <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem;" data-modal-target="logVitalsModal">
+        + Record Entry
+      </button>
+    </div>
+
+    <div class="vitals-grid">
+      {% set latest_v = vitals[0] if vitals else None %}
+      <div class="vital-card">
+        <div class="vital-icon">🫀</div>
+        <div class="vital-value">{{ latest_v.BloodPressure if latest_v else '120/80 mmHg' }}</div>
+        <div class="vital-label">Blood Pressure (Resting)</div>
+        <span class="vital-tag" style="background: var(--success-bg); color: var(--success);">Normal</span>
+      </div>
+
+      <div class="vital-card">
+        <div class="vital-icon">💓</div>
+        <div class="vital-value">{{ latest_v.HeartRate if latest_v else 74 }} <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">bpm</span></div>
+        <div class="vital-label">Resting Heart Rate</div>
+        <span class="vital-tag" style="background: var(--success-bg); color: var(--success);">Stable</span>
+      </div>
+
+      <div class="vital-card">
+        <div class="vital-icon">🩸</div>
+        <div class="vital-value">{{ latest_v.BloodGlucose if latest_v else 98 }} <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">mg/dL</span></div>
+        <div class="vital-label">Fasting Blood Sugar</div>
+        <span class="vital-tag" style="background: var(--info-bg); color: var(--info);">Optimal</span>
+      </div>
+
+      <div class="vital-card">
+        <div class="vital-icon">🫁</div>
+        <div class="vital-value">{{ latest_v.OxygenSpO2 if latest_v else 99 }}%</div>
+        <div class="vital-label">Pulse Oximetry (SpO2)</div>
+        <span class="vital-tag" style="background: var(--success-bg); color: var(--success);">95-100% OK</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics Grid -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon">📅</div>
+      <div>
+        <div class="metric-value">{{ appointments|length }}</div>
+        <div class="metric-label">Total Consultations</div>
+      </div>
+    </div>
+    <div class="metric-card teal">
+      <div class="metric-icon">📋</div>
+      <div>
+        <div class="metric-value">{{ diagnoses|length }}</div>
+        <div class="metric-label">Diagnosis & Rx Records</div>
+      </div>
+    </div>
+    <div class="metric-card emerald">
+      <div class="metric-icon">🩺</div>
+      <div>
+        <div class="metric-value">{{ doctors|length }}</div>
+        <div class="metric-label">Specialists In Network</div>
+      </div>
+    </div>
+    <div class="metric-card indigo">
+      <div class="metric-icon">🛡</div>
+      <div>
+        <div class="metric-value" style="font-size: 1.35rem; color: var(--accent-teal);">Verified</div>
+        <div class="metric-label">Digital Records Vault</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Filter Bar -->
+  <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+    <div style="position: relative; max-width: 440px; width: 100%;">
+      <input type="text" id="timelineSearchInput" class="form-control" placeholder="🔍 Search appointments, medications, doctors, or reports...">
+    </div>
+    <div style="font-size: 0.88rem; color: var(--text-muted);">
+      Press <kbd style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">Ctrl + K</kbd> for quick actions
+    </div>
+  </div>
+
+  <!-- Dashboard Main Grid -->
+  <div class="dashboard-grid">
+    
+    <!-- Left Column: Medical History & Prescriptions Timeline -->
+    <div>
+      <div class="section-header">
+        <h2 class="section-title"><span>📋</span> Medical History & Digital Prescriptions</h2>
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">{{ diagnoses|length }} Record(s)</span>
+      </div>
+
+      {% if diagnoses %}
+        <div class="timeline" id="diagnosesTimelineList">
+          {% for dx in diagnoses %}
+            <div class="timeline-item diagnosis-entry" data-search="{{ dx.Condition }} {{ dx.DoctorName }} {{ dx.Summary }} {{ dx.Prescription or '' }}">
+              <div class="timeline-node"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <div>
+                    <div class="timeline-condition">{{ dx.Condition }}</div>
+                    <div class="timeline-doctor">Attending Physician: <strong>{{ dx.DoctorName }}</strong></div>
+                  </div>
+                  <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); background: var(--bg-main); border: 1px solid var(--border-subtle); padding: 0.25rem 0.6rem; border-radius: 6px; font-weight: 600;">
+                    {{ dx.Date }}
+                  </div>
+                </div>
+
+                <div class="timeline-summary">
+                  <strong>Clinical Assessment:</strong> {{ dx.Summary }}
+                </div>
+
+                {% if dx.Symptoms %}
+                  <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+                    <strong>Reported Symptoms:</strong> {{ dx.Symptoms }}
+                  </div>
+                {% endif %}
+
+                {% if dx.Prescription %}
+                  <div class="prescription-box">
+                    <span>Rx Medical Prescription</span>
+                    <div style="font-size: 0.9rem; color: var(--text-main); font-weight: 500;">{{ dx.Prescription }}</div>
+                  </div>
+                {% endif %}
+
+                <!-- Functional Action Buttons on Diagnosis Record -->
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; align-items: center;">
+                  <a href="{{ url_for('view_prescription', diagnosis_id=dx.DiagnosisID) }}" target="_blank" class="btn btn-secondary btn-sm" style="font-size: 0.82rem;">
+                    🖨️ View & Print Prescription Slip
+                  </a>
+                  {% if dx.ReportUrl or dx.ReportFileName %}
+                    <a href="{{ dx.ReportUrl if dx.ReportUrl else url_for('uploaded_file', filename=dx.ReportFileName) }}" target="_blank" class="timeline-report-link">
+                      📄 Attached Lab Report: {{ dx.ReportFileName }}
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="card" style="text-align: center; padding: 3.5rem 1.5rem; color: var(--text-muted);">
+          <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📋</div>
+          <h3 style="margin-bottom: 0.5rem; color: var(--text-main);">No Diagnostic History Yet</h3>
+          <p style="font-size: 0.95rem; max-width: 480px; margin: 0 auto;">Once your doctor completes a consultation and submits an assessment, the clinical evaluation, prescriptions, and lab reports will display here.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Appointments & Applications -->
+    <div>
+      <div class="section-header">
+        <h2 class="section-title"><span>📅</span> Your Consultations</h2>
+      </div>
+
+      <!-- Filter Tabs for Patient Appointments -->
+      <div class="dashboard-tabs" style="margin-bottom: 1.25rem;">
+        <button type="button" class="tab-btn active" onclick="filterPatientAppts('ALL', this)">
+          All <span class="tab-badge">{{ appointments|length }}</span>
+        </button>
+        <button type="button" class="tab-btn" onclick="filterPatientAppts('PENDING', this)">
+          🟡 Pending Review
+        </button>
+        <button type="button" class="tab-btn" onclick="filterPatientAppts('CONFIRMED', this)">
+          🟢 Confirmed
+        </button>
+        <button type="button" class="tab-btn" onclick="filterPatientAppts('COMPLETED', this)">
+          Completed
+        </button>
+      </div>
+
+      <div class="appointment-list" id="patientApptsList">
+        {% if appointments %}
+          {% for appt in appointments %}
+            {% set is_pending = appt.Status in ['Pending Approval', 'Requested'] %}
+            {% set is_confirmed = appt.Status in ['Confirmed', 'Scheduled', 'In Consultation'] %}
+            {% set is_completed = appt.Status == 'Completed' %}
+            {% set is_cancelled = appt.Status in ['Cancelled', 'Declined'] %}
+
+            <div class="appointment-card patient-appt-item" 
+                 data-status-category="{% if is_pending %}PENDING{% elif is_confirmed %}CONFIRMED{% elif is_completed %}COMPLETED{% else %}CANCELLED{% endif %}"
+                 style="flex-direction: column; align-items: stretch; gap: 0.85rem;">
+              
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem;">
+                <div class="appt-info">
+                  <div class="appt-date-badge">
+                    <div class="appt-date-day">{{ appt.Date.split('-')[2] if '-' in appt.Date else '24' }}</div>
+                    <div class="appt-date-month">{{ appt.Date.split('-')[1] if '-' in appt.Date else 'SEP' }}</div>
+                  </div>
+                  <div class="appt-details">
+                    <h4>{{ appt.DoctorName }}</h4>
+                    <div class="appt-meta">
+                      <span>🕒 {{ appt.Time }}</span>
+                      <span>🏥 {{ appt.Department }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  {% if is_pending %}
+                    <span class="status-pill status-pending">🟡 Pending Doctor Review</span>
+                  {% elif appt.Status == 'In Consultation' %}
+                    <span class="status-pill status-in-consultation">🩺 In Consultation</span>
+                  {% elif is_confirmed %}
+                    <span class="status-pill status-confirmed">🟢 Confirmed</span>
+                  {% elif is_completed %}
+                    <span class="status-pill status-completed">Completed</span>
+                  {% else %}
+                    <span class="status-pill status-cancelled">{{ appt.Status }}</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Chief Complaint -->
+              <div style="font-size: 0.85rem; color: var(--text-body); background: var(--bg-main); border: 1px solid var(--border-subtle); padding: 0.5rem 0.75rem; border-radius: 6px;">
+                <strong>Reason:</strong> {{ appt.Reason }}
+                {% if is_pending %}
+                  <div style="color: var(--warning); font-size: 0.78rem; margin-top: 0.25rem;">
+                    ⏳ Application sent to doctor. You will receive an instant notification once confirmed.
+                  </div>
+                {% endif %}
+              </div>
+
+              <!-- Functional Action Buttons -->
+              <div style="display: flex; justify-content: flex-end; gap: 0.5rem; flex-wrap: wrap;">
+                {% if not is_completed and not is_cancelled %}
+                  <!-- Add to Calendar Button -->
+                  <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.78rem;" 
+                          onclick="downloadCalendarInvite('{{ appt.DoctorName }}', '{{ appt.Date }}', '{{ appt.Time }}', '{{ appt.Reason }}')">
+                    📅 Add to Calendar
+                  </button>
+                  
+                  <!-- Cancel Request Button -->
+                  <form action="{{ url_for('cancel_appointment') }}" method="POST" style="margin: 0;" onsubmit="return confirm('Cancel this consultation request?');">
+                    <input type="hidden" name="appointment_id" value="{{ appt.AppointmentID }}">
+                    <button type="submit" class="btn btn-secondary btn-sm" style="font-size: 0.78rem; color: var(--danger); border-color: var(--danger-border);">
+                      Cancel Request
+                    </button>
+                  </form>
+                {% endif %}
+              </div>
+
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="card" style="text-align: center; padding: 2.5rem 1.5rem; color: var(--text-muted);">
+            <p>You have no appointments scheduled.</p>
+            <button class="btn btn-primary btn-sm" style="margin-top: 0.75rem;" data-modal-target="bookApptModal">
+              Book a Consultation
+            </button>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Log Vitals Modal -->
+<div id="logVitalsModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 520px;">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <span style="font-size: 1.3rem;">🩺</span>
+        <h3 class="modal-title">Log Today's Health Vitals</h3>
+      </div>
+      <button type="button" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form action="{{ url_for('save_vitals') }}" method="POST">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Systolic BP (mmHg)</label>
+            <input type="number" name="systolic" class="form-control" value="120" min="70" max="250" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Diastolic BP (mmHg)</label>
+            <input type="number" name="diastolic" class="form-control" value="80" min="40" max="150" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Heart Rate (bpm)</label>
+            <input type="number" name="heart_rate" class="form-control" value="74" min="40" max="200" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Blood Glucose (mg/dL)</label>
+            <input type="number" name="blood_glucose" class="form-control" value="95" min="40" max="400" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Oxygen SpO2 (%)</label>
+            <input type="number" name="oxygen_spo2" class="form-control" value="99" min="70" max="100" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Weight (kg)</label>
+            <input type="number" step="0.1" name="weight_kg" class="form-control" value="68.5" min="20" max="250" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Clinical Notes / Comments</label>
+          <input type="text" name="notes" class="form-control" placeholder="e.g. Taken 30 mins after morning walk">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Health Record &rarr;</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Book New Appointment Modal -->
+<div id="bookApptModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 580px;">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <span style="font-size: 1.3rem;">📅</span>
+        <h3 class="modal-title">Book Specialist Consultation</h3>
+      </div>
+      <button type="button" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form action="{{ url_for('book_appointment') }}" method="POST" id="patientBookingForm">
+        
+        <div class="form-group">
+          <label class="form-label" for="bookingDoctorSelect">Choose Specialist Physician</label>
+          <select name="doctor_id" id="bookingDoctorSelect" class="form-select" required>
+            {% for doc in doctors %}
+              <option value="{{ doc.DoctorID }}" 
+                      data-slots='{{ doc.AvailableSlots | tojson }}'
+                      data-fee="{{ doc.FeeINR or 700 }}"
+                      data-hospital="{{ doc.Hospital or 'Sahyadri / Ruby Hall, Pune' }}"
+                      {% if preselected_doctor_id == doc.DoctorID %}selected{% endif %}>
+                {{ doc.FullName }} — {{ doc.Specialty }} (₹{{ doc.FeeINR or 700 }})
+              </option>
+            {% endfor %}
+          </select>
+          <div id="bookingFeeDisplay" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="bookingDate">Preferred Consultation Date</label>
+          <input type="date" name="date" id="bookingDate" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Select Available Time Slot</label>
+          <div id="availableSlotsContainer" class="slot-grid">
+            <!-- Dynamic Slots via JS -->
+          </div>
+          <input type="hidden" name="time_slot" id="selectedTimeSlot" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="bookingReason">Chief Health Complaint / Symptoms</label>
+          <textarea name="reason" id="bookingReason" class="form-control" rows="3" placeholder="Briefly describe what symptoms you are experiencing..." required></textarea>
+        </div>
+
+        <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text-body);">
+          ✓ <strong>Instant Physician Review:</strong> Your application is submitted directly to the doctor's review queue. Instant confirmation alerts are dispatched via SMS & email.
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Application &rarr;</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+  // Set default appointment date to tomorrow
+  const dateInput = document.getElementById('bookingDate');
+  if (dateInput) {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.value = tomorrow.toISOString().split('T')[0];
+    dateInput.min = new Date().toISOString().split('T')[0];
+  }
+
+  // Pre-select doctor and auto-open booking modal if parameters are present
+  const preselectedDocId = "{{ preselected_doctor_id }}";
+  const shouldAutoBook = "{{ auto_book }}";
+  const doctorSelect = document.getElementById('bookingDoctorSelect');
+
+  if (doctorSelect) {
+    function updateFeeBadge() {
+      const opt = doctorSelect.options[doctorSelect.selectedIndex];
+      if (opt) {
+        const fee = opt.getAttribute('data-fee') || '700';
+        const hosp = opt.getAttribute('data-hospital') || 'Pune Clinic';
+        const feeEl = document.getElementById('bookingFeeDisplay');
+        if (feeEl) {
+          feeEl.innerHTML = `Consultation Fee: <strong>₹${fee}</strong> • Location: <em>${hosp}</em>`;
+        }
+      }
+    }
+    doctorSelect.addEventListener('change', updateFeeBadge);
+
+    if (preselectedDocId) {
+      doctorSelect.value = preselectedDocId;
+      doctorSelect.dispatchEvent(new Event('change'));
+    } else {
+      updateFeeBadge();
+    }
+  }
+
+  if (shouldAutoBook === "1" || preselectedDocId) {
+    setTimeout(() => {
+      openModal("bookApptModal");
+    }, 150);
+  }
+
+  // Filter Patient Appointments by status tab
+  function filterPatientAppts(category, clickedBtn) {
+    document.querySelectorAll('.dashboard-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+    if (clickedBtn) clickedBtn.classList.add('active');
+
+    const items = document.querySelectorAll('.patient-appt-item');
+    items.forEach(item => {
+      const cat = item.getAttribute('data-status-category');
+      if (category === 'ALL' || cat === category) {
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+
+  // Live filter for diagnoses and medical history
+  const searchInput = document.getElementById('timelineSearchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      const entries = document.querySelectorAll('.diagnosis-entry');
+      entries.forEach(entry => {
+        const text = (entry.getAttribute('data-search') || '').toLowerCase();
+        entry.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    });
+  }
+
+  // Add to Calendar Helper (.ics generator)
+  function downloadCalendarInvite(doctorName, dateStr, timeStr, reason) {
+    const title = `MedTrack Consultation: ${doctorName}`;
+    const description = `Consultation with ${doctorName}. Chief Complaint: ${reason}`;
+    const location = "MedTrack Clinical OPD Center";
+
+    const cleanDate = dateStr.replace(/-/g, '');
+    const icsContent = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MedTrack Healthcare//Appointment//EN
+BEGIN:VEVENT
+SUMMARY:${title}
+DESCRIPTION:${description}
+LOCATION:${location}
+DTSTART:${cleanDate}T090000Z
+DTEND:${cleanDate}T100000Z
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute('download', `MedTrack_Appointment_${dateStr}.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showToast("Calendar event (.ics) generated!", "success");
+  }
+</script>
+{% endblock %}

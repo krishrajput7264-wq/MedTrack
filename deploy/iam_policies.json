@@ -1,0 +1,55 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "MedTrackDynamoDBAccess",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:GetItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:DescribeTable"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:*:*:table/MedTrack_*"
+      ]
+    },
+    {
+      "Sid": "MedTrackSNSPublish",
+      "Effect": "Allow",
+      "Action": [
+        "sns:Publish"
+      ],
+      "Resource": [
+        "arn:aws:sns:*:*:MedTrack_*"
+      ]
+    },
+    {
+      "Sid": "MedTrackS3Storage",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::medtrack-*",
+        "arn:aws:s3:::medtrack-*/*"
+      ]
+    },
+    {
+      "Sid": "MedTrackCloudWatchMetricsAndLogs",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:PutMetricData",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

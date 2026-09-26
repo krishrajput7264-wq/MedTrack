@@ -1,0 +1,15 @@
+[Unit]
+Description=MedTrack Healthcare Management System (Gunicorn WSGI Application)
+After=network.target
+
+[Service]
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/home/ec2-user/medtrack
+Environment="PATH=/home/ec2-user/medtrack/venv/bin:/usr/local/bin:/usr/bin"
+ExecStart=/home/ec2-user/medtrack/venv/bin/gunicorn --config deploy/gunicorn.conf.py app:app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

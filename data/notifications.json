@@ -1,0 +1,227 @@
+[
+  {
+    "NotificationID": "notif_18bb7131",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Application Accepted by Dr. Dr. Sarah Mitchell",
+    "Message": "Dear Alex Mercer,\n\nGreat news! Dr. Dr. Sarah Mitchell has reviewed and confirmed your consultation request.\n\n\u2022 Date: 2026-10-12\n\u2022 Time: 02:00 PM\n\u2022 Department: Cardiology\n\u2022 Clinic Location: MedTrack Clinical Center, OPD Consultation Suite\n\nPlease arrive 10 minutes prior to your allocated slot with any prior medical records.",
+    "EventType": "APPOINTMENT_ACCEPTED",
+    "Timestamp": "2026-09-26 16:50:01 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_a0821033",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Amit Patil has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: Clinical exam normal. BP 120/80. Advised hydration.\nPrescription / Treatment Plan: Multivitamin OD for 15 days, Hydration 3L/day\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-26 16:50:01 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_5aad9dce",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Aditi Deshmukh",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Aditi Deshmukh (Cardiovascular Sciences) has been confirmed for 2026-10-05 at 11:00 AM.\n\nAppointment ID: APT-A12328\nReason for Visit: Routine cardio evaluation in Pune\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-26 16:50:00 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_bc88da89",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Application Accepted by Dr. Dr. Sarah Mitchell",
+    "Message": "Dear Alex Mercer,\n\nGreat news! Dr. Dr. Sarah Mitchell has reviewed and confirmed your consultation request.\n\n\u2022 Date: 2026-10-12\n\u2022 Time: 02:00 PM\n\u2022 Department: Cardiology\n\u2022 Clinic Location: MedTrack Clinical Center, OPD Consultation Suite\n\nPlease arrive 10 minutes prior to your allocated slot with any prior medical records.",
+    "EventType": "APPOINTMENT_ACCEPTED",
+    "Timestamp": "2026-09-26 16:11:48 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_897b2794",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Amit Patil has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: Clinical exam normal. BP 120/80. Advised hydration.\nPrescription / Treatment Plan: Multivitamin OD for 15 days, Hydration 3L/day\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-26 16:11:48 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_4b0d562b",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Aditi Deshmukh",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Aditi Deshmukh (Cardiovascular Sciences) has been confirmed for 2026-10-05 at 11:00 AM.\n\nAppointment ID: APT-9DE71F\nReason for Visit: Routine cardio evaluation in Pune\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-26 16:11:47 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_9e0f23e0",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Application Accepted by Dr. Dr. Sarah Mitchell",
+    "Message": "Dear Alex Mercer,\n\nGreat news! Dr. Dr. Sarah Mitchell has reviewed and confirmed your consultation request.\n\n\u2022 Date: 2026-10-12\n\u2022 Time: 02:00 PM\n\u2022 Department: Cardiology\n\u2022 Clinic Location: MedTrack Clinical Center, OPD Consultation Suite\n\nPlease arrive 10 minutes prior to your allocated slot with any prior medical records.",
+    "EventType": "APPOINTMENT_ACCEPTED",
+    "Timestamp": "2026-09-26 16:10:49 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_ad864b62",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Amit Patil has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: Clinical exam normal. BP 120/80. Advised hydration.\nPrescription / Treatment Plan: Multivitamin OD for 15 days, Hydration 3L/day\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-26 16:10:49 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_2e891b35",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Aditi Deshmukh",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Aditi Deshmukh (Cardiovascular Sciences) has been confirmed for 2026-10-05 at 11:00 AM.\n\nAppointment ID: APT-CECABC\nReason for Visit: Routine cardio evaluation in Pune\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-26 16:10:48 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_d09f4a00",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Application Accepted by Dr. Dr. Sarah Mitchell",
+    "Message": "Dear Alex Mercer,\n\nGreat news! Dr. Dr. Sarah Mitchell has reviewed and confirmed your consultation request.\n\n\u2022 Date: 2026-10-12\n\u2022 Time: 02:00 PM\n\u2022 Department: Cardiology\n\u2022 Clinic Location: MedTrack Clinical Center, OPD Consultation Suite\n\nPlease arrive 10 minutes prior to your allocated slot with any prior medical records.",
+    "EventType": "APPOINTMENT_ACCEPTED",
+    "Timestamp": "2026-09-26 15:47:45 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_812b3c30",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Amit Patil has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: Clinical exam normal. BP 120/80. Advised hydration.\nPrescription / Treatment Plan: Multivitamin OD for 15 days, Hydration 3L/day\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-26 15:47:45 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_d40cf044",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Aditi Deshmukh",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Aditi Deshmukh (Cardiovascular Sciences) has been confirmed for 2026-10-05 at 11:00 AM.\n\nAppointment ID: APT-9800F8\nReason for Visit: Routine cardio evaluation in Pune\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-26 15:47:45 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_55b09a53",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Amit Patil has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: Clinical exam normal. BP 120/80. Advised hydration.\nPrescription / Treatment Plan: Multivitamin OD for 15 days, Hydration 3L/day\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-26 15:47:27 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_3bedea67",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Aditi Deshmukh",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Aditi Deshmukh (Cardiovascular Sciences) has been confirmed for 2026-10-05 at 11:00 AM.\n\nAppointment ID: APT-23FB3E\nReason for Visit: Routine cardio evaluation in Pune\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-26 15:47:27 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_5be8400b",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Amit Patil has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: Clinical exam normal. BP 120/80. Advised hydration.\nPrescription / Treatment Plan: Multivitamin OD for 15 days, Hydration 3L/day\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-26 15:43:17 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_e6876aa5",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Aditi Deshmukh",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Aditi Deshmukh (Cardiovascular Sciences) has been confirmed for 2026-10-05 at 11:00 AM.\n\nAppointment ID: APT-770CC3\nReason for Visit: Routine cardio evaluation in Pune\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-26 15:43:16 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_a76655b9",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Amit Patil has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: Clinical exam normal. BP 120/80. Advised hydration.\nPrescription / Treatment Plan: Multivitamin OD for 15 days, Hydration 3L/day\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-26 15:41:27 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_4077edeb",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Aditi Deshmukh",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Aditi Deshmukh (Cardiovascular Sciences) has been confirmed for 2026-10-05 at 11:00 AM.\n\nAppointment ID: APT-F7FF32\nReason for Visit: Routine cardio evaluation in Pune\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-26 15:41:26 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_1c3bd580",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Amit Patil has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: Clinical exam normal. BP 120/80. Advised hydration.\nPrescription / Treatment Plan: Multivitamin OD for 15 days, Hydration 3L/day\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-22 15:08:10 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_8667bb68",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Aditi Deshmukh",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Aditi Deshmukh (Cardiovascular Sciences) has been confirmed for 2026-10-05 at 11:00 AM.\n\nAppointment ID: APT-233440\nReason for Visit: Routine cardio evaluation in Pune\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-22 15:08:10 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_f7cb61d8",
+    "Recipient": "krishrajput7264@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Sarah Mitchell",
+    "Message": "Dear Krish Rajput,\n\nYour medical appointment with Dr. Dr. Sarah Mitchell (Cardiovascular Medicine) has been confirmed for 2026-09-23 at 09:00 AM.\n\nAppointment ID: APT-4C2C01\nReason for Visit: sick\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-22 14:58:35 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_ce115fa6",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Sarah Mitchell has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: 12-lead ECG indicates normal sinus rhythm. Heart rate 72 bpm.\nPrescription / Treatment Plan: Hydration, electrolyte balance, monitor resting heart rate.\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-22 14:48:18 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_526317fe",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Sarah Mitchell",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Sarah Mitchell (Cardiovascular Medicine) has been confirmed for 2026-10-05 at 10:30 AM.\n\nAppointment ID: APT-8947EB\nReason for Visit: Test routine cardio checkup\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-22 14:48:18 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_b964566c",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack Alert: New Medical Diagnosis & Report Submitted",
+    "Message": "Dear Alex Mercer,\n\nDr. Dr. Sarah Mitchell has uploaded a new diagnosis evaluation and medical report for your consultation regarding Normal Sinus Rhythm.\n\nDiagnosis Summary: 12-lead ECG indicates normal sinus rhythm. Heart rate 72 bpm.\nPrescription / Treatment Plan: Hydration, electrolyte balance, monitor resting heart rate.\n\nPlease log in to your MedTrack Portal to review complete notes and download test documents.",
+    "EventType": "DIAGNOSIS_SUBMITTED",
+    "Timestamp": "2026-09-22 14:18:05 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  },
+  {
+    "NotificationID": "notif_4edcb3ae",
+    "Recipient": "alex.mercer@gmail.com",
+    "Subject": "MedTrack: Appointment Confirmed - Dr. Dr. Sarah Mitchell",
+    "Message": "Dear Alex Mercer,\n\nYour medical appointment with Dr. Dr. Sarah Mitchell (Cardiovascular Medicine) has been confirmed for 2026-10-05 at 10:30 AM.\n\nAppointment ID: APT-14077E\nReason for Visit: Test routine cardio checkup\nLocation / Telehealth: MedTrack Central Clinic - Suite 4B\n\nTo modify or reschedule, please access your MedTrack Patient Portal.",
+    "EventType": "APPOINTMENT_BOOKED",
+    "Timestamp": "2026-09-22 14:18:04 UTC",
+    "Status": "DELIVERED (SIMULATED)"
+  }
+]

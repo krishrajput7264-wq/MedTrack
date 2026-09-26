@@ -1,0 +1,30 @@
+[
+  {
+    "PatientID": "PAT-1001",
+    "FullName": "Alex Mercer",
+    "Email": "alex.mercer@gmail.com",
+    "PasswordHash": "scrypt:32768:8:1$4UfFbeDHDsMnU9d8$9b65aa2fddb65a989821087b69303474849b9182a0ea412286b7fa37dccd85790ba3b184606845c2f9b75813339cbb4913a515818d868f6ab3c51d951a606ab0",
+    "DateOfBirth": "1992-05-14",
+    "Gender": "Male",
+    "BloodGroup": "O+",
+    "Phone": "+1 (555) 234-8901",
+    "EmergencyContact": "Elena Mercer (+1 555-908-1123)",
+    "Allergies": "Penicillin, Sulfa drugs",
+    "ChronicConditions": "Mild Hypertension",
+    "CreatedAt": "2026-01-10T10:00:00Z"
+  },
+  {
+    "FullName": "Krish Rajput",
+    "Email": "krishrajput7264@gmail.com",
+    "DateOfBirth": "2006-06-22",
+    "Gender": "Male",
+    "BloodGroup": "B+",
+    "Phone": "+91 7264848428",
+    "EmergencyContact": "",
+    "Allergies": "",
+    "ChronicConditions": "",
+    "PatientID": "PAT-ACBFFE",
+    "CreatedAt": "2026-09-22T14:56:55.320891+00:00",
+    "PasswordHash": "scrypt:32768:8:1$Kj4fx8AeRJXQfSb6$2b1dc71fde82b2791e5103dcf8d649ebc4fffdc8f4cfe80f77f21cdde6c28587db871e5e367a030787cd4573a4d78f4574547cc105f0ab06a4eb26d6f050b7db"
+  }
+]

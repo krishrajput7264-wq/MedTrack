@@ -1,0 +1,456 @@
+{% extends "base.html" %}
+
+{% block title %}MedTrack - Healthcare & Specialist Portal | Pune & India{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section style="padding: 5rem 0 4rem; position: relative; overflow: hidden; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);">
+  <div class="container">
+    <div style="max-width: 880px; margin: 0 auto; text-align: center;">
+      
+      <div class="status-badge" style="margin-bottom: 1.5rem; display: inline-flex; border-color: var(--primary-light); background: var(--primary-light); color: var(--primary);">
+        <span style="font-weight: 700;">✚</span> Serving Pune, Maharashtra & Pan-India
+      </div>
+      
+      <h1 style="font-size: clamp(2.4rem, 5.5vw, 3.8rem); font-weight: 800; letter-spacing: -0.035em; margin-bottom: 1.25rem; color: var(--text-main); line-height: 1.15;">
+        Premier Healthcare in Pune,<br>
+        <span style="color: var(--primary);">Reimagined For You.</span>
+      </h1>
+      
+      <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 2.5rem; max-width: 740px; margin-left: auto; margin-right: auto;">
+        Consult top board-certified doctors across Pune (Kothrud, Baner, Deccan, Viman Nagar, Hinjawadi) and pan-India. Book instant appointments, receive digital prescriptions, and access verified health records securely.
+      </p>
+
+      <!-- Dynamic Action Buttons based on Login State -->
+      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        {% if current_user_id %}
+          {% if current_role == 'doctor' %}
+            <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-primary btn-lg">
+              Open My Clinical Workspace &rarr;
+            </a>
+          {% else %}
+            <a href="{{ url_for('patient_dashboard') }}" class="btn btn-primary btn-lg">
+              Go to My Patient Portal &rarr;
+            </a>
+            <a href="{{ url_for('patient_dashboard', book='1') }}" class="btn btn-dark btn-lg">
+              ➕ Book Consultation
+            </a>
+          {% endif %}
+        {% else %}
+          <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
+            Book an Appointment &rarr;
+          </a>
+          <a href="{{ url_for('login') }}?role=doctor" class="btn btn-dark btn-lg">
+            Doctor Sign In
+          </a>
+          <a href="{{ url_for('register') }}?role=doctor" class="btn btn-secondary btn-lg" style="border-color: #cbd5e1;">
+            🩺 Register as Doctor
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Trust Badges Under Hero -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 2.5rem; margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <div style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">★ 4.9 / 5.0</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Patient Satisfaction in Pune</div>
+        </div>
+        <div style="width: 1px; height: 30px; background: var(--border-subtle);"></div>
+        <div style="text-align: center;">
+          <div style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">MMC & NMC</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Certified Medical Specialists</div>
+        </div>
+        <div style="width: 1px; height: 30px; background: var(--border-subtle);"></div>
+        <div style="text-align: center;">
+          <div style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">108 / 112</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Emergency Care Integrated</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Clinical Features & Solutions Section -->
+<section id="services" style="padding: 4.5rem 0; border-top: 1px solid var(--border-subtle); background: #ffffff;">
+  <div class="container">
+    <div style="text-align: center; max-width: 680px; margin: 0 auto 3.5rem;">
+      <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary);">
+        COMPREHENSIVE CARE
+      </span>
+      <h2 style="font-size: 2.1rem; margin-top: 0.4rem; margin-bottom: 0.75rem; color: var(--text-main);">
+        Modern Clinical Solutions For India
+      </h2>
+      <p style="color: var(--text-muted); font-size: 1.05rem;">
+        Bridging patients with leading hospitals and private clinics across Pune and Maharashtra.
+      </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+      
+      <!-- Feature 1 -->
+      <div class="card" style="padding: 2rem;">
+        <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.25rem;">
+          📅
+        </div>
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-main);">
+          OPD & Consultation Slots
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          Real-time appointment booking with verified Pune physicians at Sahyadri, Jupiter, Ruby Hall, Deenanath Mangeshkar, and Apollo clinics.
+        </p>
+        <div style="font-size: 0.82rem; font-weight: 600; color: var(--primary);">
+          ✓ Instant SMS & Email Booking Alerts
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="card" style="padding: 2rem;">
+        <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); background: #f4f4f5; color: var(--dark); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.25rem;">
+          📑
+        </div>
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-main);">
+          Digital Health Records Vault
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          Encrypted patient health records, blood reports, ECG scans, and MRI diagnostics stored with 256-bit security, easily downloadable anytime.
+        </p>
+        <div style="font-size: 0.82rem; font-weight: 600; color: var(--dark);">
+          ✓ Encrypted Digital Vault
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="card" style="padding: 2rem;">
+        <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--accent-teal-light); color: var(--accent-teal); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.25rem;">
+          💊
+        </div>
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-main);">
+          Doctor Diagnosis & Digital Rx
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          Doctors examine symptom timelines and issue digital medical prescriptions (Rx) compliant with Indian pharmacy and clinical standards.
+        </p>
+        <div style="font-size: 0.82rem; font-weight: 600; color: var(--accent-teal);">
+          ✓ Direct Physician Charting
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 3-Step Healthcare & Application Workflow Architecture -->
+<section style="padding: 4rem 0; background: var(--bg-surface); border-top: 1px solid var(--border-subtle);">
+  <div class="container">
+    <div style="text-align: center; max-width: 680px; margin: 0 auto 3rem;">
+      <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary);">
+        HOW MEDTRACK WORKS
+      </span>
+      <h2 style="font-size: 2.1rem; margin-top: 0.4rem; margin-bottom: 0.75rem; color: var(--text-main);">
+        Seamless Doctor-Patient Coordination
+      </h2>
+      <p style="color: var(--text-muted); font-size: 1.05rem;">
+        A transparent, multi-tier clinical workflow designed for modern healthcare delivery.
+      </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+      
+      <!-- Step 1 -->
+      <div class="card" style="padding: 2rem; position: relative;">
+        <div style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; font-weight: 800; color: var(--border-card); font-family: var(--font-mono);">
+          01
+        </div>
+        <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.25rem;">
+          📅
+        </div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-main);">
+          1. Book / Apply For Consultation
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+          Patients choose their verified specialist, select an available date and time slot, and provide their chief health complaint.
+        </p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="card" style="padding: 2rem; position: relative; border-color: var(--primary-glow);">
+        <div style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; font-weight: 800; color: var(--primary); font-family: var(--font-mono); opacity: 0.5;">
+          02
+        </div>
+        <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--warning-bg); color: var(--warning); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.25rem;">
+          ⚡
+        </div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-main);">
+          2. Doctor Review & Acceptance
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+          Physicians receive incoming patient applications in their dedicated <strong>Client Accept Panel</strong> to review medical summaries and confirm with 1 click.
+        </p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="card" style="padding: 2rem; position: relative;">
+        <div style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; font-weight: 800; color: var(--border-card); font-family: var(--font-mono);">
+          03
+        </div>
+        <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--accent-teal-light); color: var(--accent-teal); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.25rem;">
+          🩺
+        </div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-main);">
+          3. Consultation & Digital Rx
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+          Clinicians chart SOAP notes and generate verified, printable digital prescriptions with QR verification, accessible in the patient's records vault.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Available Specialists Section with City & Locality Filter -->
+<section id="specialists" style="padding: 4.5rem 0; background: var(--bg-main); border-top: 1px solid var(--border-subtle);">
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary);">
+          VERIFIED MEDICAL FACULTY
+        </span>
+        <h2 style="font-size: 2.1rem; margin-top: 0.35rem; margin-bottom: 0.35rem; color: var(--text-main);">
+          Consult Top Specialists in Pune & India
+        </h2>
+        <p style="color: var(--text-muted); font-size: 1rem;">
+          Filter by Pune area or clinical specialty to find the right physician for your family
+        </p>
+      </div>
+      <a href="{{ url_for('register') }}?role=doctor" class="btn btn-secondary btn-sm">
+        ✚ Join as a Specialist Doctor
+      </a>
+    </div>
+
+    <!-- Quick Filter Category Pills -->
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+      <button type="button" class="btn btn-sm btn-primary filter-pill-btn active" data-specialty-filter="ALL" onclick="quickFilterSpecialty('ALL', this)">
+        All Specialists
+      </button>
+      <button type="button" class="btn btn-sm btn-secondary filter-pill-btn" data-specialty-filter="Cardiology" onclick="quickFilterSpecialty('Cardiology', this)">
+        ❤️ Cardiology
+      </button>
+      <button type="button" class="btn btn-sm btn-secondary filter-pill-btn" data-specialty-filter="Neurology" onclick="quickFilterSpecialty('Neurology', this)">
+        🧠 Neurology
+      </button>
+      <button type="button" class="btn btn-sm btn-secondary filter-pill-btn" data-specialty-filter="Pediatrics" onclick="quickFilterSpecialty('Pediatrics', this)">
+        👶 Pediatrics
+      </button>
+      <button type="button" class="btn btn-sm btn-secondary filter-pill-btn" data-specialty-filter="Orthopedics" onclick="quickFilterSpecialty('Orthopedics', this)">
+        🦴 Orthopedics
+      </button>
+    </div>
+
+    <!-- Locality & Specialty Filter Bar -->
+    <div class="card" style="margin-bottom: 2.25rem; padding: 1.25rem; background: var(--bg-surface);">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; align-items: center;">
+        
+        <div>
+          <label style="display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem; text-transform: uppercase;">
+            📍 Select Area / Locality (Pune):
+          </label>
+          <select id="filterAreaSelect" class="form-select" style="padding: 0.6rem 0.85rem; font-size: 0.9rem;">
+            <option value="ALL">All Localities in Pune & India</option>
+            <option value="Kothrud">Kothrud / Erandwane</option>
+            <option value="Baner">Baner / Balewadi</option>
+            <option value="Deccan Gymkhana">Deccan Gymkhana / Shivaji Nagar</option>
+            <option value="Viman Nagar">Viman Nagar / Kalyani Nagar</option>
+            <option value="Hinjawadi">Hinjawadi / Wakad (IT Park)</option>
+            <option value="Camp">Camp / Rasta Peth</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem; text-transform: uppercase;">
+            🩺 Select Clinical Specialty:
+          </label>
+          <select id="filterSpecialtySelect" class="form-select" style="padding: 0.6rem 0.85rem; font-size: 0.9rem;">
+            <option value="ALL">All Medical Specialties</option>
+            <option value="Cardiology">Cardiology & Heart Care</option>
+            <option value="Neurology">Neurology & Brain Health</option>
+            <option value="Pediatrics">Pediatrics & Child Care</option>
+            <option value="Orthopedics">Orthopedics & Joint Surgery</option>
+            <option value="General Physician">General Physician</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem; text-transform: uppercase;">
+            🔍 Search Doctor or Hospital:
+          </label>
+          <input type="text" id="filterDoctorSearch" class="form-control" style="padding: 0.6rem 0.85rem; font-size: 0.9rem;" placeholder="e.g. Sahyadri, KEM, Dr. Mitchell...">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Doctor Cards Grid -->
+    <div id="doctorCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.75rem;">
+      {% for doc in doctors %}
+        <div class="card doctor-card" 
+             data-area="{{ doc.Area or 'Pune' }}" 
+             data-specialty="{{ doc.Specialty }}" 
+             data-search="{{ doc.FullName }} {{ doc.Specialty }} {{ doc.Hospital or '' }} {{ doc.Area or '' }}"
+             style="display: flex; flex-direction: column; justify-content: space-between; padding: 1.75rem; border-top: 3px solid var(--primary);">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.85rem;">
+              <span class="status-pill status-completed" style="font-weight: 700;">★ {{ doc.Rating }}</span>
+              <span style="font-size: 0.88rem; font-weight: 800; color: var(--primary);">
+                ₹{{ doc.FeeINR or 700 }} <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 500;">OPD</span>
+              </span>
+            </div>
+            
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem; color: var(--text-main);">{{ doc.FullName }}</h3>
+            <div style="color: var(--primary); font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem;">{{ doc.Specialty }}</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; line-height: 1.5;">{{ doc.Qualifications }}</p>
+            
+            <div style="background: var(--bg-main); border: 1px solid var(--border-subtle); padding: 0.6rem 0.85rem; border-radius: var(--radius-sm); margin-bottom: 1rem; font-size: 0.82rem; color: var(--text-body);">
+              <div>🏥 <strong>{{ doc.Hospital or 'MedTrack Partner Hospital' }}</strong></div>
+              <div style="color: var(--text-muted); margin-top: 0.2rem;">📍 {{ doc.Area or 'Pune City' }}, Pune • {{ doc.ExperienceYears }}+ Yrs Exp</div>
+              {% if doc.RegNo %}
+                <div style="color: var(--text-dim); font-size: 0.75rem; font-family: var(--font-mono); margin-top: 0.25rem;">Reg: {{ doc.RegNo }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.45rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+              Available Slots:
+            </div>
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+              {% for slot in doc.AvailableSlots %}
+                <span style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); padding: 0.22rem 0.55rem; border-radius: 6px; font-size: 0.75rem; color: var(--text-main); font-weight: 600;">
+                  {{ slot }}
+                </span>
+              {% endfor %}
+            </div>
+
+            <!-- Direct 1-Click Booking Button -->
+            {% if current_user_id and current_role == 'patient' %}
+              <a href="{{ url_for('patient_dashboard', doctor_id=doc.DoctorID, book='1') }}" class="btn btn-primary btn-sm" style="width: 100%;">
+                Book Consultation &rarr;
+              </a>
+            {% elif current_user_id and current_role == 'doctor' %}
+              <div style="text-align: center; font-size: 0.82rem; color: var(--text-muted); padding: 0.35rem;">
+                Logged in as Clinician
+              </div>
+            {% else %}
+              <a href="{{ url_for('login', doctor_id=doc.DoctorID, role='patient') }}" class="btn btn-primary btn-sm" style="width: 100%;">
+                Book Consultation &rarr;
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Empty Filter Notice -->
+    <div id="noDoctorFoundNotice" style="display: none; text-align: center; padding: 3rem 1.5rem; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-top: 1.5rem;">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">🩺</div>
+      <h3 style="font-size: 1.2rem; color: var(--text-main); margin-bottom: 0.35rem;">No specialists match this filter</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Try selecting "All Localities" or a different medical department.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- Demo Test Credentials Card -->
+<section style="padding: 2.5rem 0 4rem; background: var(--bg-main);">
+  <div class="container">
+    <div class="card" style="background: var(--dark); border: 1px solid var(--dark-subtle); color: #ffffff; padding: 2rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+        <div>
+          <span style="font-size: 0.75rem; font-family: var(--font-mono); color: #f87171; font-weight: 700; letter-spacing: 0.05em;">
+            QUICK 1-CLICK EVALUATION
+          </span>
+          <h3 style="font-size: 1.4rem; margin-top: 0.25rem; margin-bottom: 0.4rem; color: #ffffff;">
+            Demo Accounts For Project Evaluation
+          </h3>
+          <p style="color: #94a3b8; font-size: 0.92rem; max-width: 520px;">
+            Test the booking flow or clinical doctor diagnosis workspace with pre-configured Pune demo credentials:
+          </p>
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <div style="background: rgba(255,255,255,0.06); padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 0.75rem; color: #f87171; font-weight: 700; letter-spacing: 0.05em;">PATIENT ACCOUNT</div>
+            <div style="font-size: 0.9rem; color: #ffffff; font-weight: 600;">alex.mercer@gmail.com</div>
+            <div style="font-size: 0.78rem; color: #cbd5e1; font-family: var(--font-mono);">Password: patient123</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 0.75rem; color: #34d399; font-weight: 700; letter-spacing: 0.05em;">PUNE DOCTOR ACCOUNT</div>
+            <div style="font-size: 0.9rem; color: #ffffff; font-weight: 600;">sarah.mitchell@medtrack.org</div>
+            <div style="font-size: 0.78rem; color: #cbd5e1; font-family: var(--font-mono);">Password: doctor123</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Pune Area and Specialty Real-time Filter
+  const areaSelect = document.getElementById('filterAreaSelect');
+  const specialtySelect = document.getElementById('filterSpecialtySelect');
+  const searchInput = document.getElementById('filterDoctorSearch');
+  const cards = document.querySelectorAll('.doctor-card');
+  const emptyNotice = document.getElementById('noDoctorFoundNotice');
+
+  function applyDoctorFilters() {
+    const selectedArea = areaSelect ? areaSelect.value.toLowerCase() : 'all';
+    const selectedSpecialty = specialtySelect ? specialtySelect.value.toLowerCase() : 'all';
+    const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const cardArea = (card.getAttribute('data-area') || '').toLowerCase();
+      const cardSpecialty = (card.getAttribute('data-specialty') || '').toLowerCase();
+      const cardSearch = (card.getAttribute('data-search') || '').toLowerCase();
+
+      const matchesArea = (selectedArea === 'all') || cardArea.includes(selectedArea);
+      const matchesSpecialty = (selectedSpecialty === 'all') || cardSpecialty.includes(selectedSpecialty);
+      const matchesSearch = !searchQuery || cardSearch.includes(searchQuery);
+
+      if (matchesArea && matchesSpecialty && matchesSearch) {
+        card.style.display = 'flex';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (emptyNotice) {
+      emptyNotice.style.display = (visibleCount === 0) ? 'block' : 'none';
+    }
+  }
+
+  if (areaSelect) areaSelect.addEventListener('change', applyDoctorFilters);
+  if (specialtySelect) specialtySelect.addEventListener('change', applyDoctorFilters);
+  if (searchInput) searchInput.addEventListener('input', applyDoctorFilters);
+
+  function quickFilterSpecialty(specialty, clickedBtn) {
+    if (specialtySelect) {
+      specialtySelect.value = specialty;
+      applyDoctorFilters();
+    }
+    document.querySelectorAll('.filter-pill-btn').forEach(btn => {
+      btn.classList.remove('btn-primary', 'active');
+      btn.classList.add('btn-secondary');
+    });
+    if (clickedBtn) {
+      clickedBtn.classList.remove('btn-secondary');
+      clickedBtn.classList.add('btn-primary', 'active');
+    }
+  }
+</script>
+{% endblock %}

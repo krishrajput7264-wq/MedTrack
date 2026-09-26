@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="100%" height="100%">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#1e293b"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <style>
+    .entity-box { fill: #ffffff; stroke: #334155; stroke-width: 1.8; rx: 6px; filter: url(#shadow); }
+    .title { font-family: 'Segoe UI', Inter, -apple-system, sans-serif; font-size: 16px; font-weight: 700; fill: #0f172a; text-anchor: middle; }
+    .attr { font-family: 'Segoe UI', Inter, -apple-system, sans-serif; font-size: 12.5px; fill: #334155; text-anchor: middle; }
+    .cardinality { font-family: 'Segoe UI', Inter, -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #475569; text-anchor: middle; }
+    .conn { stroke: #334155; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+  </style>
+
+  <!-- Background -->
+  <rect width="1000" height="650" fill="#f8fafc"/>
+
+  <!-- Connections -->
+  <!-- Users to Doctors -->
+  <path d="M 440 85 L 175 85 L 175 142" class="conn"/>
+  <text x="215" y="78" class="cardinality">1 : N</text>
+
+  <!-- Users to Patients -->
+  <path d="M 500 100 L 500 142" class="conn"/>
+  <text x="525" y="125" class="cardinality">1 : N</text>
+
+  <!-- Users to Notifications -->
+  <path d="M 560 85 L 825 85 L 825 142" class="conn"/>
+  <text x="785" y="78" class="cardinality">1 : N</text>
+
+  <!-- Doctors to Appointments -->
+  <path d="M 175 220 L 175 260 L 420 260 L 420 292" class="conn"/>
+  <text x="240" y="253" class="cardinality">1 : N</text>
+
+  <!-- Patients to Appointments -->
+  <path d="M 500 220 L 500 292" class="conn"/>
+  <text x="525" y="260" class="cardinality">1 : N</text>
+
+  <!-- Appointments to Diagnosis -->
+  <path d="M 500 375 L 500 422" class="conn"/>
+  <text x="525" y="405" class="cardinality">1 : 1</text>
+
+  <!-- Users Entity -->
+  <rect x="360" y="30" width="280" height="70" class="entity-box"/>
+  <text x="500" y="56" class="title">Users</text>
+  <text x="500" y="80" class="attr">(UserID, Name, Email, Role, Password, Phone)</text>
+
+  <!-- Doctors Entity -->
+  <rect x="40" y="150" width="270" height="70" class="entity-box"/>
+  <text x="175" y="176" class="title">Doctors</text>
+  <text x="175" y="200" class="attr">(DoctorID, UserID, Specialization, Experience)</text>
+
+  <!-- Patients Entity -->
+  <rect x="365" y="150" width="270" height="70" class="entity-box"/>
+  <text x="500" y="176" class="title">Patients</text>
+  <text x="500" y="200" class="attr">(PatientID, UserID, Age, MedicalHistory)</text>
+
+  <!-- Notifications Entity -->
+  <rect x="680" y="150" width="290" height="70" class="entity-box"/>
+  <text x="825" y="176" class="title">Notifications</text>
+  <text x="825" y="200" class="attr">(NotificationID, UserID, Message, Timestamp)</text>
+
+  <!-- Appointments Entity -->
+  <rect x="300" y="300" width="400" height="75" class="entity-box"/>
+  <text x="500" y="328" class="title">Appointments</text>
+  <text x="500" y="354" class="attr">(AppointmentID, PatientID, DoctorID, Date, Time, Status)</text>
+
+  <!-- Diagnosis Entity -->
+  <rect x="270" y="430" width="460" height="75" class="entity-box"/>
+  <text x="500" y="458" class="title">Diagnosis</text>
+  <text x="500" y="484" class="attr">(DiagnosisID, AppointmentID, DoctorID, PatientID, Report, Date)</text>
+
+</svg>

@@ -1,0 +1,476 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Clinical Workspace - MedTrack{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-bottom: 4rem;">
+
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="dashboard-title">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+        <h1>Clinical Workspace</h1>
+        <span class="status-badge" style="font-size: 0.78rem; font-family: var(--font-mono); font-weight: 700;">
+          DOC ID: {{ doctor.DoctorID }}
+        </span>
+      </div>
+      <div class="dashboard-subtitle">
+        <strong style="color: var(--text-main);">{{ doctor.FullName }}</strong> • {{ doctor.Specialty }} • 🏥 {{ doctor.Hospital or 'Sahyadri / Ruby Hall, Pune' }} ({{ doctor.Area or 'Pune' }}) • {{ doctor.Room }} • Fee: <strong>₹{{ doctor.FeeINR or 700 }}</strong>
+        {% if doctor.RegNo %} • <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">MMC/NMC: {{ doctor.RegNo }}</span>{% endif %}
+      </div>
+    </div>
+    <div class="dashboard-actions">
+      <button class="btn btn-primary" data-modal-target="diagnoseModal">
+        ✍ New Clinical Diagnosis
+      </button>
+    </div>
+  </div>
+
+  <!-- Metric Cards -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon">🟡</div>
+      <div>
+        <div class="metric-value" style="color: var(--warning);">{{ pending_appts|length }}</div>
+        <div class="metric-label">Pending Client Applications</div>
+      </div>
+      {% if pending_appts|length > 0 %}
+        <span class="badge-dot" style="position: absolute; top: 1.25rem; right: 1.25rem; background: var(--warning); box-shadow: 0 0 10px var(--warning);" title="New applications awaiting review"></span>
+      {% endif %}
+    </div>
+
+    <div class="metric-card teal">
+      <div class="metric-icon">👥</div>
+      <div>
+        <div class="metric-value">{{ confirmed_appts|length }}</div>
+        <div class="metric-label">Confirmed Patient Queue</div>
+      </div>
+    </div>
+
+    <div class="metric-card emerald">
+      <div class="metric-icon">📑</div>
+      <div>
+        <div class="metric-value">{{ diagnoses|length }}</div>
+        <div class="metric-label">Diagnoses & Reports Issued</div>
+      </div>
+    </div>
+
+    <div class="metric-card indigo">
+      <div class="metric-icon">★</div>
+      <div>
+        <div class="metric-value">{{ doctor.Rating }} / 5.0</div>
+        <div class="metric-label">Physician Quality Score</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workspace Navigation Tabs -->
+  <div class="dashboard-tabs" id="doctorWorkspaceTabs">
+    <button type="button" class="tab-btn active" onclick="switchDoctorTab('pending', this)">
+      🟡 Client Applications (New Requests)
+      <span class="tab-badge" style="background: var(--warning-bg); color: var(--warning);">{{ pending_appts|length }}</span>
+    </button>
+    <button type="button" class="tab-btn" onclick="switchDoctorTab('confirmed', this)">
+      🟢 Confirmed Consultations Queue
+      <span class="tab-badge">{{ confirmed_appts|length }}</span>
+    </button>
+    <button type="button" class="tab-btn" onclick="switchDoctorTab('completed', this)">
+      🔵 Completed Sessions
+      <span class="tab-badge">{{ completed_appts|length }}</span>
+    </button>
+    <button type="button" class="tab-btn" onclick="switchDoctorTab('diagnoses', this)">
+      📂 Diagnostic Records & Lab Vault
+      <span class="tab-badge">{{ diagnoses|length }}</span>
+    </button>
+  </div>
+
+  <!-- Tab 1: Client Applications & Accept Panel -->
+  <div id="tabContent-pending" class="doctor-tab-panel">
+    <div class="section-header">
+      <h2 class="section-title"><span>📥</span> Patient Consultation Applications Awaiting Approval</h2>
+      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+        {{ pending_appts|length }} Application(s) Pending Review
+      </span>
+    </div>
+
+    {% if pending_appts %}
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% for appt in pending_appts %}
+          <!-- Find matching patient profile for allergy & chronic condition check -->
+          {% set pt_match = None %}
+          {% for pt in patients %}
+            {% if pt.PatientID == appt.PatientID %}
+              {% set pt_match = pt %}
+            {% endif %}
+          {% endfor %}
+
+          <div class="application-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                  <h3 style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 2px;">
+                    {{ appt.PatientName }}
+                  </h3>
+                  <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); background: var(--bg-subtle); padding: 2px 6px; border-radius: 4px;">
+                    {{ appt.PatientID }}
+                  </span>
+                  <span class="status-pill status-pending">Pending Review</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.25rem;">
+                  Requested Slot: <strong style="color: var(--text-main);">{{ appt.Date }}</strong> at <strong style="color: var(--primary);">{{ appt.Time }}</strong>
+                </div>
+              </div>
+
+              <!-- Action Buttons for Application Acceptance -->
+              <div style="display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;">
+                <!-- Accept Button -->
+                <form action="{{ url_for('doctor_accept_appointment') }}" method="POST" style="margin: 0;">
+                  <input type="hidden" name="appointment_id" value="{{ appt.AppointmentID }}">
+                  <button type="submit" class="btn btn-primary btn-sm" style="background: var(--success); border-color: var(--success);">
+                    ✓ Accept Application
+                  </button>
+                </form>
+
+                <!-- Decline Button -->
+                <form action="{{ url_for('doctor_decline_appointment') }}" method="POST" style="margin: 0;" onsubmit="return confirm('Decline this consultation request? The patient will be notified.');">
+                  <input type="hidden" name="appointment_id" value="{{ appt.AppointmentID }}">
+                  <button type="submit" class="btn btn-secondary btn-sm" style="color: var(--danger); border-color: var(--danger-border);">
+                    ✕ Decline
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Patient Profile & Medical Summary Strip -->
+            <div class="patient-info-strip">
+              <div>
+                <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase;">Blood Group</span>
+                <strong style="color: var(--primary);">{{ pt_match.BloodGroup if pt_match and pt_match.BloodGroup else 'O+' }}</strong>
+              </div>
+              <div style="width: 1px; height: 24px; background: var(--border-subtle);"></div>
+              <div>
+                <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase;">Reported Allergies</span>
+                <strong style="color: {% if pt_match and pt_match.Allergies and pt_match.Allergies != 'None' and pt_match.Allergies != 'None reported' %}var(--danger){% else %}var(--text-main){% endif %};">
+                  {{ pt_match.Allergies if pt_match and pt_match.Allergies else 'None reported' }}
+                </strong>
+              </div>
+              <div style="width: 1px; height: 24px; background: var(--border-subtle);"></div>
+              <div>
+                <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase;">Chronic Conditions</span>
+                <strong>{{ pt_match.ChronicConditions if pt_match and pt_match.ChronicConditions else 'None reported' }}</strong>
+              </div>
+              <div style="width: 1px; height: 24px; background: var(--border-subtle);"></div>
+              <div>
+                <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase;">Contact Number</span>
+                <span>{{ appt.PatientPhone or 'On Record' }}</span>
+              </div>
+            </div>
+
+            <!-- Reason / Chief Complaint -->
+            <div style="font-size: 0.92rem; color: var(--text-body); background: var(--bg-main); border: 1px solid var(--border-subtle); padding: 0.75rem 1rem; border-radius: 6px;">
+              <strong style="color: var(--text-main);">Chief Complaint & Symptoms:</strong> {{ appt.Reason }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card" style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted);">
+        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">✓</div>
+        <h3 style="color: var(--text-main); margin-bottom: 0.35rem;">All Caught Up!</h3>
+        <p style="font-size: 0.92rem;">No pending patient applications currently awaiting review in your queue.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Tab 2: Confirmed & Active Consultations Queue -->
+  <div id="tabContent-confirmed" class="doctor-tab-panel" style="display: none;">
+    <div class="section-header">
+      <h2 class="section-title"><span>📋</span> Confirmed Patient Consultations</h2>
+      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+        {{ confirmed_appts|length }} Active Consultation(s)
+      </span>
+    </div>
+
+    {% if confirmed_appts %}
+      <div class="appointment-list">
+        {% for appt in confirmed_appts %}
+          <div class="appointment-card" style="align-items: flex-start;">
+            <div class="appt-info" style="align-items: flex-start;">
+              <div class="appt-date-badge">
+                <div class="appt-date-day">{{ appt.Date.split('-')[2] if '-' in appt.Date else '24' }}</div>
+                <div class="appt-date-month">{{ appt.Date.split('-')[1] if '-' in appt.Date else 'SEP' }}</div>
+              </div>
+              <div class="appt-details">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <h4>{{ appt.PatientName }}</h4>
+                  <span style="font-size: 0.75rem; color: var(--text-dim); font-family: var(--font-mono); font-weight: 600;">{{ appt.PatientID }}</span>
+                </div>
+                <div class="appt-meta" style="margin-top: 0.2rem;">
+                  <span>🕒 {{ appt.Time }}</span>
+                  <span>📞 {{ appt.PatientPhone or 'Contact On File' }}</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-body); margin-top: 0.65rem; background: var(--bg-main); border: 1px solid var(--border-subtle); padding: 0.65rem 0.85rem; border-radius: 6px;">
+                  <strong>Chief Complaint:</strong> {{ appt.Reason }}
+                  {% if appt.Notes %}
+                    <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;">Notes: {{ appt.Notes }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons for Consultation -->
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">
+              {% if appt.Status == 'In Consultation' %}
+                <span class="status-pill status-in-consultation">🩺 In Active Consultation</span>
+              {% else %}
+                <span class="status-pill status-confirmed">🟢 Confirmed Slot</span>
+              {% endif %}
+
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.35rem;">
+                {% if appt.Status != 'In Consultation' %}
+                  <form action="{{ url_for('doctor_start_consultation') }}" method="POST" style="margin: 0;">
+                    <input type="hidden" name="appointment_id" value="{{ appt.AppointmentID }}">
+                    <button type="submit" class="btn btn-secondary btn-sm" style="font-size: 0.8rem; color: var(--info); border-color: var(--info-border);">
+                      🩺 Start Call / Consult
+                    </button>
+                  </form>
+                {% endif %}
+
+                <button type="button" class="btn btn-primary btn-sm" 
+                        data-diagnose-appt="{{ appt.AppointmentID }}" 
+                        data-patient-id="{{ appt.PatientID }}"
+                        data-patient-name="{{ appt.PatientName }}">
+                  ✍ Diagnose & Chart
+                </button>
+              </div>
+
+              <form action="{{ url_for('update_appointment') }}" method="POST" style="margin: 0;">
+                <input type="hidden" name="appointment_id" value="{{ appt.AppointmentID }}">
+                <input type="hidden" name="status" value="Cancelled">
+                <button type="submit" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; color: var(--text-muted); border: none; background: none;" onclick="return confirm('Cancel this appointment?');">
+                  Cancel Appointment
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card" style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted);">
+        <p>No confirmed appointments scheduled in your queue.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Tab 3: Completed Consultations -->
+  <div id="tabContent-completed" class="doctor-tab-panel" style="display: none;">
+    <div class="section-header">
+      <h2 class="section-title"><span>🔵</span> Completed Patient Consultations</h2>
+      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+        {{ completed_appts|length }} Finished Session(s)
+      </span>
+    </div>
+
+    {% if completed_appts %}
+      <div class="appointment-list">
+        {% for appt in completed_appts %}
+          <div class="appointment-card" style="align-items: center;">
+            <div class="appt-info">
+              <div class="appt-date-badge">
+                <div class="appt-date-day">{{ appt.Date.split('-')[2] if '-' in appt.Date else '24' }}</div>
+                <div class="appt-date-month">{{ appt.Date.split('-')[1] if '-' in appt.Date else 'SEP' }}</div>
+              </div>
+              <div class="appt-details">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <h4>{{ appt.PatientName }}</h4>
+                  <span style="font-size: 0.75rem; color: var(--text-dim); font-family: var(--font-mono); font-weight: 600;">{{ appt.PatientID }}</span>
+                </div>
+                <div class="appt-meta" style="margin-top: 0.2rem;">
+                  <span>🕒 {{ appt.Time }}</span>
+                  <span>Reason: {{ appt.Reason }}</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <span class="status-pill status-completed">Completed</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card" style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted);">
+        <p>No completed consultation history yet.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Tab 4: Diagnostic Records & Lab Vault -->
+  <div id="tabContent-diagnoses" class="doctor-tab-panel" style="display: none;">
+    <div class="section-header">
+      <h2 class="section-title"><span>📂</span> Submitted Diagnostic Records & Lab Reports Vault</h2>
+      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+        {{ diagnoses|length }} Clinical Record(s)
+      </span>
+    </div>
+
+    {% if diagnoses %}
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% for dx in diagnoses %}
+          <div class="card" style="padding: 1.4rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <strong style="color: var(--text-main); font-size: 1.15rem;">{{ dx.Condition }}</strong>
+                <span style="font-size: 0.88rem; color: var(--text-muted); margin-left: 0.5rem;">(Patient: <strong>{{ dx.PatientName }}</strong> — {{ dx.PatientID }})</span>
+              </div>
+              <span style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--text-muted); background: var(--bg-main); border: 1px solid var(--border-subtle); padding: 0.2rem 0.5rem; border-radius: 4px;">
+                {{ dx.Date }}
+              </span>
+            </div>
+            <p style="font-size: 0.92rem; color: var(--text-body); margin-bottom: 0.85rem; line-height: 1.6;">{{ dx.Summary }}</p>
+            {% if dx.Prescription %}
+              <div class="prescription-box" style="margin-bottom: 0.75rem;">
+                <span>Prescribed Treatment</span>
+                <div style="font-size: 0.88rem; color: var(--text-main); font-weight: 500;">{{ dx.Prescription }}</div>
+              </div>
+            {% endif %}
+            
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-top: 0.85rem;">
+              <a href="{{ url_for('view_prescription', diagnosis_id=dx.DiagnosisID) }}" target="_blank" class="btn btn-secondary btn-sm" style="font-size: 0.8rem;">
+                🖨️ View & Print Prescription
+              </a>
+              {% if dx.ReportFileName %}
+                <a href="{{ dx.ReportUrl if dx.ReportUrl else url_for('uploaded_file', filename=dx.ReportFileName) }}" target="_blank" class="timeline-report-link">
+                  📄 Lab Report: {{ dx.ReportFileName }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card" style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted);">
+        <p>No diagnostic evaluations recorded yet.</p>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- Diagnosis & Report Upload Modal -->
+<div id="diagnoseModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 680px;">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <span style="font-size: 1.25rem;">🩺</span>
+        <h3 class="modal-title">Record Clinical Diagnosis & Prescription</h3>
+      </div>
+      <button type="button" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="diagApptBadge" style="color: var(--primary); font-size: 0.88rem; font-weight: 700; margin-bottom: 1rem;"></div>
+
+      <form action="{{ url_for('submit_diagnosis') }}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="appointment_id" id="diagApptIdInput" value="">
+
+        <div class="form-group">
+          <label class="form-label" for="diagPatientSelect">Select Patient *</label>
+          <select name="patient_id" id="diagPatientSelect" class="form-select" required>
+            {% for p in patients %}
+              <option value="{{ p.PatientID }}">{{ p.FullName }} ({{ p.PatientID }}) — Blood: {{ p.BloodGroup }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="diagCondition">Diagnosed Condition / Pathology *</label>
+          <input type="text" name="condition" id="diagCondition" class="form-control" placeholder="e.g. Acute Sinusitis, Type 2 Diabetes Mellitus, Lumbar Radiculopathy" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="diagSymptoms">Reported Symptoms</label>
+          <input type="text" name="symptoms" id="diagSymptoms" class="form-control" placeholder="e.g. Persistent fever, dull facial pain, nasal congestion">
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <label class="form-label" for="diagSummary" style="margin-bottom: 0;">Clinical Evaluation & Summary Notes *</label>
+            <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 2px 8px;" onclick="applySOAPFormatting()">
+              ✨ AI SOAP Note Formatter
+            </button>
+          </div>
+          <textarea name="summary" id="diagSummary" class="form-control" rows="4" placeholder="Medical assessment notes, vitals, examination findings..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="diagPrescription">Prescription & Treatment Plan (Rx)</label>
+          <textarea name="prescription" id="diagPrescription" class="form-control" rows="3" placeholder="e.g. Amoxicillin 500mg TID for 7 days, Saline nasal spray, Rest & hydration"></textarea>
+        </div>
+
+        <!-- File Upload for Medical Report -->
+        <div class="form-group">
+          <label class="form-label">Upload Lab Report / Imaging Scan (PDF, JPG, PNG)</label>
+          <div style="border: 2px dashed #cbd5e1; border-radius: var(--radius-sm); padding: 1.5rem; text-align: center; background: var(--bg-main); cursor: pointer; transition: var(--transition);" onclick="document.getElementById('reportFileInput').click()">
+            <div style="font-size: 1.75rem; margin-bottom: 0.35rem;">📄</div>
+            <div id="reportFileNameDisplay" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">
+              Click to choose medical report or drag and drop file here
+            </div>
+            <input type="file" name="report_file" id="reportFileInput" style="display: none;" accept=".pdf,.png,.jpg,.jpeg,.docx,.txt">
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 0.4rem;">
+            Supported formats: PDF, PNG, JPG, DOCX (Max 25MB). Uploaded directly to the patient's verified medical record vault.
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.75rem;">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Diagnosis & Issue Prescription &rarr;</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+  function switchDoctorTab(tabId, clickedBtn) {
+    document.querySelectorAll('#doctorWorkspaceTabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+    if (clickedBtn) clickedBtn.classList.add('active');
+
+    document.querySelectorAll('.doctor-tab-panel').forEach(panel => {
+      panel.style.display = 'none';
+    });
+
+    const activePanel = document.getElementById(`tabContent-${tabId}`);
+    if (activePanel) {
+      activePanel.style.display = 'block';
+    }
+  }
+
+  // AI SOAP Note Formatter helper
+  function applySOAPFormatting() {
+    const summaryInput = document.getElementById('diagSummary');
+    const condition = document.getElementById('diagCondition').value || 'Reported Condition';
+    const symptoms = document.getElementById('diagSymptoms').value || 'Reported Symptoms';
+    
+    if (summaryInput) {
+      const existing = summaryInput.value.trim();
+      summaryInput.value = 
+`[SUBJECTIVE]
+Patient reports: ${symptoms}. ${existing ? 'Additional note: ' + existing : ''}
+
+[OBJECTIVE]
+Vitals: Stable resting parameters. Physical and systemic examination performed.
+
+[ASSESSMENT]
+Clinical diagnosis: ${condition}.
+
+[PLAN]
+Advised targeted pharmacotherapy as prescribed below. Follow-up consultation scheduled if symptoms persist.`;
+      showToast("Clinical notes formatted to standard SOAP structure!", "info");
+    }
+  }
+</script>
+{% endblock %}

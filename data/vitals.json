@@ -1,0 +1,67 @@
+[
+  {
+    "VitalsID": "VIT-BC8F82",
+    "PatientID": "PAT-1001",
+    "Systolic": 118,
+    "Diastolic": 78,
+    "BloodPressure": "118/78 mmHg",
+    "HeartRate": 72,
+    "BloodGlucose": 94,
+    "OxygenSpO2": 99,
+    "WeightKg": 69.0,
+    "RecordedAt": "2026-09-26 16:50",
+    "Notes": "Test vitals log"
+  },
+  {
+    "VitalsID": "VIT-53F5F0",
+    "PatientID": "PAT-1001",
+    "Systolic": 118,
+    "Diastolic": 78,
+    "BloodPressure": "118/78 mmHg",
+    "HeartRate": 72,
+    "BloodGlucose": 94,
+    "OxygenSpO2": 99,
+    "WeightKg": 69.0,
+    "RecordedAt": "2026-09-26 16:11",
+    "Notes": "Test vitals log"
+  },
+  {
+    "VitalsID": "VIT-C8FAEE",
+    "PatientID": "PAT-1001",
+    "Systolic": 118,
+    "Diastolic": 78,
+    "BloodPressure": "118/78 mmHg",
+    "HeartRate": 72,
+    "BloodGlucose": 94,
+    "OxygenSpO2": 99,
+    "WeightKg": 69.0,
+    "RecordedAt": "2026-09-26 16:10",
+    "Notes": "Test vitals log"
+  },
+  {
+    "VitalsID": "VIT-4C4A67",
+    "PatientID": "PAT-1001",
+    "Systolic": 118,
+    "Diastolic": 78,
+    "BloodPressure": "118/78 mmHg",
+    "HeartRate": 72,
+    "BloodGlucose": 94,
+    "OxygenSpO2": 99,
+    "WeightKg": 69.0,
+    "RecordedAt": "2026-09-26 15:47",
+    "Notes": "Test vitals log"
+  },
+  {
+    "VitalsID": "VIT-101",
+    "PatientID": "PAT-1001",
+    "Systolic": 120,
+    "Diastolic": 80,
+    "BloodPressure": "120/80 mmHg",
+    "HeartRate": 74,
+    "BloodGlucose": 98,
+    "OxygenSpO2": 99,
+    "WeightKg": 68.5,
+    "RecordedAt": "2026-09-26 15:43",
+    "Notes": "Normal baseline resting vitals"
+  }
+]

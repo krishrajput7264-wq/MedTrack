@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Registration Portal - MedTrack Healthcare{% endblock %}
+
+{% block content %}
+<section style="padding: 4rem 0 6rem; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);">
+  <div class="container" style="max-width: 720px;">
+    <div class="card" style="box-shadow: var(--shadow-lg); padding: 2.5rem;">
+      
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary);">
+          MEDTRACK HEALTHCARE NETWORK • PUNE & INDIA
+        </span>
+        <h2 style="font-size: 1.85rem; margin-top: 0.35rem; margin-bottom: 0.35rem; color: var(--text-main);" id="regHeading">
+          Create Your Medical Profile
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem;" id="regSubheading">
+          Register to book specialist appointments or manage your clinical medical records.
+        </p>
+      </div>
+
+      <!-- Role Switcher Tabs -->
+      <div style="display: flex; background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 2rem;">
+        <button type="button" id="tabRegPatient" class="btn btn-sm" style="flex: 1; border-radius: 6px; background: var(--primary); color: #fff; font-weight: 700;" onclick="setRegisterRole('patient')">
+          👤 Register as Patient
+        </button>
+        <button type="button" id="tabRegDoctor" class="btn btn-sm" style="flex: 1; border-radius: 6px; background: transparent; color: var(--text-muted); font-weight: 600;" onclick="setRegisterRole('doctor')">
+          🩺 Register as Doctor / Specialist
+        </button>
+      </div>
+
+      <form action="{{ url_for('register') }}" method="POST" id="mainRegisterForm">
+        <input type="hidden" name="role" id="registerRoleInput" value="patient">
+
+        <!-- ============================================== -->
+        <!-- PATIENT REGISTRATION FIELDS                    -->
+        <!-- ============================================== -->
+        <div id="patientFieldsContainer">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="regFullName">Full Legal Name *</label>
+              <input type="text" name="full_name" id="regFullName" class="form-control" placeholder="e.g. Rahul Sharma" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regEmail">Email Address *</label>
+              <input type="email" name="email" id="regEmail" class="form-control" placeholder="rahul.sharma@example.com" required>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="regPassword">Account Password *</label>
+              <input type="password" name="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regPhone">Mobile Phone (+91 India) *</label>
+              <input type="tel" name="phone" id="regPhone" class="form-control" placeholder="+91 98220 12345" required>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="regDob">Date of Birth *</label>
+              <input type="date" name="dob" id="regDob" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regGender">Gender</label>
+              <select name="gender" id="regGender" class="form-select">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other / Non-binary</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regBlood">Blood Group</label>
+              <select name="blood_group" id="regBlood" class="form-select">
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regEmergency">Emergency Contact Person & Phone</label>
+            <input type="text" name="emergency_contact" id="regEmergency" class="form-control" placeholder="e.g. Sunita Sharma (+91 98220 54321)">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="regAllergies">Known Allergies</label>
+              <input type="text" name="allergies" id="regAllergies" class="form-control" placeholder="e.g. Penicillin, Peanuts (or None)">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regChronic">Chronic Conditions</label>
+              <input type="text" name="chronic_conditions" id="regChronic" class="form-control" placeholder="e.g. Diabetes, Hypertension (or None)">
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- DOCTOR REGISTRATION FIELDS                     -->
+        <!-- ============================================== -->
+        <div id="doctorFieldsContainer" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="docFullName">Doctor Full Name (with prefix) *</label>
+              <input type="text" name="doc_full_name" id="docFullName" class="form-control" placeholder="e.g. Dr. Amit Patil">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="docEmail">Official Email Address *</label>
+              <input type="email" name="doc_email" id="docEmail" class="form-control" placeholder="e.g. amit.patil@medtrack.in">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="docPassword">Account Password *</label>
+              <input type="password" name="doc_password" id="docPassword" class="form-control" placeholder="Minimum 6 characters">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="docPhone">Doctor Mobile Phone (+91 India) *</label>
+              <input type="tel" name="doc_phone" id="docPhone" class="form-control" placeholder="+91 98220 99887">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="docSpecialty">Medical Specialty *</label>
+              <select name="specialty" id="docSpecialty" class="form-select">
+                <option value="Cardiology & Heart Care">Cardiology & Heart Care</option>
+                <option value="Neurology & Brain Health">Neurology & Brain Health</option>
+                <option value="Pediatrics & Child Care">Pediatrics & Child Care</option>
+                <option value="Orthopedics & Joint Surgery">Orthopedics & Joint Surgery</option>
+                <option value="General Physician & Internal Medicine" selected>General Physician & Internal Medicine</option>
+                <option value="Dermatology & Skin Specialist">Dermatology & Skin Specialist</option>
+                <option value="Gynecology & Obstetrics">Gynecology & Obstetrics</option>
+                <option value="ENT & Head-Neck Surgery">ENT & Head-Neck Surgery</option>
+                <option value="Ophthalmology / Eye Care">Ophthalmology / Eye Care</option>
+                <option value="Pulmonology / Chest Care">Pulmonology / Chest Care</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="docQualifications">Degrees & Qualifications *</label>
+              <input type="text" name="qualifications" id="docQualifications" class="form-control" placeholder="e.g. MBBS, MD (Medicine), DNB">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="docRegNo">Medical Council Reg. No. (MMC / NMC) *</label>
+              <input type="text" name="reg_no" id="docRegNo" class="form-control" placeholder="e.g. MMC-2016-08492">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="docExperience">Years of Clinical Experience *</label>
+              <input type="number" name="experience" id="docExperience" class="form-control" placeholder="e.g. 12" min="1" max="55" value="8">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="docCity">City *</label>
+              <select name="city" id="docCity" class="form-select">
+                <option value="Pune" selected>Pune, Maharashtra</option>
+                <option value="Mumbai">Mumbai, Maharashtra</option>
+                <option value="Delhi NCR">Delhi NCR</option>
+                <option value="Bengaluru">Bengaluru, Karnataka</option>
+                <option value="Hyderabad">Hyderabad, Telangana</option>
+                <option value="Chennai">Chennai, Tamil Nadu</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="docArea">Area / Locality in Pune *</label>
+              <select name="area" id="docArea" class="form-select">
+                <option value="Kothrud">Kothrud</option>
+                <option value="Baner">Baner / Balewadi</option>
+                <option value="Deccan Gymkhana" selected>Deccan Gymkhana / FC Road</option>
+                <option value="Shivaji Nagar">Shivaji Nagar</option>
+                <option value="Viman Nagar">Viman Nagar</option>
+                <option value="Hinjawadi">Hinjawadi / Wakad (IT Hub)</option>
+                <option value="Camp">Camp / MG Road</option>
+                <option value="Kalyani Nagar">Kalyani Nagar / Koregaon Park</option>
+                <option value="Hadapsar">Hadapsar / Magarpatta</option>
+                <option value="Aundh">Aundh</option>
+                <option value="Pimpri-Chinchwad">Pimpri-Chinchwad (PCMC)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="docHospital">Hospital / Clinic Affiliation</label>
+              <input type="text" name="hospital" id="docHospital" class="form-control" placeholder="e.g. Sahyadri Hospital / Jupiter Hospital / Private Clinic">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="docRoom">OPD Room / Chamber</label>
+              <input type="text" name="room" id="docRoom" class="form-control" placeholder="e.g. OPD Suite 204">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="docFee">Consultation Fee (₹ INR) *</label>
+            <div style="position: relative;">
+              <span style="position: absolute; left: 1rem; top: 0.75rem; font-weight: 700; color: var(--text-muted);">₹</span>
+              <input type="number" name="fee_inr" id="docFee" class="form-control" style="padding-left: 2.25rem;" placeholder="e.g. 700" value="700">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="regSubmitBtn" style="width: 100%; margin-top: 1rem; padding: 0.85rem; font-size: 1rem;">
+          Complete Registration &rarr;
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.75rem; font-size: 0.9rem; color: var(--text-muted);">
+        Already registered with MedTrack? <a href="{{ url_for('login') }}" style="font-weight: 700; color: var(--primary);">Sign In</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  function setRegisterRole(role) {
+    const roleInput = document.getElementById('registerRoleInput');
+    const tabPatient = document.getElementById('tabRegPatient');
+    const tabDoctor = document.getElementById('tabRegDoctor');
+    const patientFields = document.getElementById('patientFieldsContainer');
+    const doctorFields = document.getElementById('doctorFieldsContainer');
+    const heading = document.getElementById('regHeading');
+    const subheading = document.getElementById('regSubheading');
+    const submitBtn = document.getElementById('regSubmitBtn');
+
+    // Inputs to toggle required attribute
+    const patientReqInputs = document.querySelectorAll('#patientFieldsContainer input[required]');
+    const docReqInputs = [
+      document.getElementById('docFullName'),
+      document.getElementById('docEmail'),
+      document.getElementById('docPassword'),
+      document.getElementById('docPhone'),
+      document.getElementById('docRegNo')
+    ];
+
+    roleInput.value = role;
+
+    if (role === 'patient') {
+      tabPatient.style.background = 'var(--primary)';
+      tabPatient.style.color = '#fff';
+      tabDoctor.style.background = 'transparent';
+      tabDoctor.style.color = 'var(--text-muted)';
+      
+      patientFields.style.display = 'block';
+      doctorFields.style.display = 'none';
+
+      heading.textContent = 'Create Your Medical Profile';
+      subheading.textContent = 'Register to book specialist appointments or manage your clinical medical records.';
+      submitBtn.textContent = 'Complete Patient Registration →';
+
+      // Ensure patient form fields are mapped
+      document.getElementById('regFullName').name = 'full_name';
+      document.getElementById('regEmail').name = 'email';
+      document.getElementById('regPassword').name = 'password';
+      document.getElementById('regPhone').name = 'phone';
+
+      patientReqInputs.forEach(i => i.required = true);
+      docReqInputs.forEach(i => { if (i) i.required = false; });
+
+    } else {
+      tabDoctor.style.background = 'var(--dark)';
+      tabDoctor.style.color = '#fff';
+      tabPatient.style.background = 'transparent';
+      tabPatient.style.color = 'var(--text-muted)';
+      
+      patientFields.style.display = 'none';
+      doctorFields.style.display = 'block';
+
+      heading.textContent = 'Join MedTrack Clinical Faculty';
+      subheading.textContent = 'Register your medical practice in Pune & India. Manage patient consultations and digital prescriptions.';
+      submitBtn.textContent = 'Register & Activate Doctor Workspace →';
+
+      // Map doctor form fields
+      document.getElementById('docFullName').name = 'full_name';
+      document.getElementById('docEmail').name = 'email';
+      document.getElementById('docPassword').name = 'password';
+      document.getElementById('docPhone').name = 'phone';
+
+      // Unset patient names to avoid conflicts
+      document.getElementById('regFullName').name = 'patient_full_name';
+      document.getElementById('regEmail').name = 'patient_email';
+      document.getElementById('regPassword').name = 'patient_password';
+      document.getElementById('regPhone').name = 'patient_phone';
+
+      patientReqInputs.forEach(i => i.required = false);
+      docReqInputs.forEach(i => { if (i) i.required = true; });
+    }
+  }
+
+  // Pre-select doctor if ?role=doctor
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('role') === 'doctor') {
+    setRegisterRole('doctor');
+  }
+</script>
+{% endblock %}

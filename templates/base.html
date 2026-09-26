@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MedTrack - Modern Healthcare & Clinical Management Portal{% endblock %}</title>
+  <meta name="description" content="MedTrack is a modern healthcare management portal for real-time appointment scheduling, doctor consultations, prescriptions, and verified medical records.">
+  
+  <!-- Modern Typography: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Flash Alerts Floating Container -->
+  <div class="alert-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            <span style="font-weight: 700; font-size: 1.1rem;">
+              {% if category == 'success' %}✓
+              {% elif category == 'danger' %}✕
+              {% elif category == 'warning' %}⚠
+              {% else %}ℹ
+              {% endif %}
+            </span>
+            <div>{{ message }}</div>
+            <button type="button" class="alert-close" onclick="this.parentElement.remove()">×</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="{{ url_for('index') }}" class="brand">
+        <div class="brand-icon">✚</div>
+        <div>Med<span>Track</span></div>
+      </a>
+
+      <ul class="nav-links">
+        <li class="nav-item"><a href="{{ url_for('index') }}">Home</a></li>
+        <li class="nav-item"><a href="{{ url_for('index') }}#specialists">Specialists</a></li>
+        <li class="nav-item"><a href="{{ url_for('index') }}#services">Services</a></li>
+        {% if current_user_id %}
+          {% if current_role == 'doctor' %}
+            <li class="nav-item"><a href="{{ url_for('doctor_dashboard') }}" class="active">Doctor Workspace</a></li>
+          {% else %}
+            <li class="nav-item"><a href="{{ url_for('patient_dashboard') }}" class="active">Patient Portal</a></li>
+          {% endif %}
+        {% endif %}
+      </ul>
+
+      <div class="nav-actions">
+        <!-- MedTrack Network Status Badge -->
+        <div class="status-badge online" title="MedTrack Healthcare Network Operational">
+          <span class="badge-dot"></span> Pune & India Network Active
+        </div>
+
+        <!-- Command Palette Quick Search Button -->
+        <button id="cmdPaletteBtn" class="theme-toggle-btn" title="Quick Search (Ctrl + K)">
+          🔍 <span style="font-size: 0.72rem; font-family: var(--font-mono); opacity: 0.8; margin-left: 2px;">⌘K</span>
+        </button>
+
+        <!-- Dark / Light Theme Switcher Button -->
+        <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Dark/Light Mode">
+          🌓
+        </button>
+
+        <!-- Notification Bell -->
+        <button id="notifBellBtn" class="notif-bell-btn" title="View Notifications">
+          🔔
+          <span class="notif-count-badge">●</span>
+        </button>
+
+        {% if current_user_id %}
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 500;">
+              Hi, <strong style="color: var(--text-main);">{{ current_user_name.split(' ')[0] }}</strong>
+            </span>
+            <a href="{{ url_for('logout') }}" class="btn btn-secondary btn-sm">Log Out</a>
+          </div>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="btn btn-secondary btn-sm">Sign In</a>
+          <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main style="flex: 1;">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Toast Notification Stack Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Global Notifications Modal -->
+  <div id="notifModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 620px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 1.25rem;">🔔</span>
+          <h3 class="modal-title">Clinical & Appointment Notifications</h3>
+        </div>
+        <button type="button" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Real-time appointment scheduling updates, clinical consultation summaries, and urgent patient alerts.
+        </p>
+        <div id="notifListContainer">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Palette Modal (Ctrl + K) -->
+  <div id="cmdPaletteModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 560px; padding: 0; overflow: hidden;">
+      <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-size: 1.2rem; color: var(--text-muted);">🔍</span>
+        <input type="text" id="cmdPaletteInput" placeholder="Type a command or search specialists, portals, records..." style="width: 100%; border: none; background: transparent; font-size: 1rem; color: var(--text-main); outline: none;">
+        <button type="button" class="modal-close" style="background: none; border: none; font-size: 1.3rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+      </div>
+      <div id="cmdPaletteList" style="max-height: 340px; overflow-y: auto; padding: 0.5rem;">
+        <div class="cmd-item" onclick="window.location.href='{{ url_for('index') }}'">
+          <span>🏠</span> Return to MedTrack Info & Home Page
+        </div>
+        <div class="cmd-item" onclick="window.location.href='{{ url_for('index') }}#specialists'">
+          <span>🩺</span> Browse Board-Certified Specialists
+        </div>
+        {% if current_user_id %}
+          {% if current_role == 'patient' %}
+            <div class="cmd-item" onclick="window.location.href='{{ url_for('patient_dashboard', book='1') }}'">
+              <span>➕</span> Book Consultation Appointment
+            </div>
+            <div class="cmd-item" onclick="window.location.href='{{ url_for('patient_dashboard') }}'">
+              <span>📋</span> View My Appointments & Vitals
+            </div>
+          {% else %}
+            <div class="cmd-item" onclick="window.location.href='{{ url_for('doctor_dashboard') }}'">
+              <span>📑</span> Open Doctor Application Queue
+            </div>
+          {% endif %}
+          <div class="cmd-item" onclick="window.location.href='{{ url_for('logout') }}'">
+            <span>🚪</span> Sign Out of Account
+          </div>
+        {% else %}
+          <div class="cmd-item" onclick="window.location.href='{{ url_for('login') }}'">
+            <span>🔑</span> Patient & Doctor Sign In
+          </div>
+          <div class="cmd-item" onclick="window.location.href='{{ url_for('register') }}'">
+            <span>📝</span> Create New Patient or Doctor Account
+          </div>
+        {% endif %}
+        <div class="cmd-item" onclick="toggleTheme();">
+          <span>🌓</span> Switch Light / Dark Mode Theme
+        </div>
+      </div>
+      <div style="background: var(--bg-subtle); padding: 0.65rem 1.25rem; font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between; border-top: 1px solid var(--border-subtle);">
+        <span>Navigation shortcut: <kbd style="background: var(--bg-surface); padding: 2px 5px; border-radius: 4px; border: 1px solid var(--border-subtle);">ESC</kbd> to close</span>
+        <span>MedTrack Quick Actions</span>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Global Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem;">
+            <div class="brand-icon" style="width: 30px; height: 30px; font-size: 0.9rem;">✚</div>
+            <div style="font-weight: 800; font-size: 1.2rem; color: #ffffff; letter-spacing: -0.02em;">
+              Med<span style="color: var(--primary);">Track</span> <span style="font-size: 0.78rem; font-weight: 600; color: #94a3b8; margin-left: 0.5rem;">Pune & India</span>
+            </div>
+          </div>
+          <p style="max-width: 520px; font-size: 0.88rem; color: #94a3b8; line-height: 1.6;">
+            A premier healthcare delivery network serving Pune (Kothrud, Baner, Deccan, Viman Nagar, Hinjawadi) and pan-India. Connecting patients with verified specialists and certified medical records.
+          </p>
+        </div>
+        <div class="footer-badges">
+          <span class="footer-tech-tag">🛡 MMC & NMC Recognized</span>
+          <span class="footer-tech-tag">🚑 108 / 112 Emergency Care</span>
+          <span class="footer-tech-tag">🩺 Verified Pune MDs</span>
+          <span class="footer-tech-tag">⚡ Instant OPD Booking</span>
+        </div>
+      </div>
+      <div style="padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: #71717a; flex-wrap: wrap; gap: 0.75rem;">
+        <span>© 2026 MedTrack Healthcare Network • Pune, Maharashtra & Pan-India</span>
+        <span>Pune Helpline: <strong>+91 20 6645 5100</strong> • Care Status: <strong style="color: #4ade80;">● All Systems Operational</strong></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

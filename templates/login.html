@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - MedTrack Healthcare Portal{% endblock %}
+
+{% block content %}
+<section style="padding: 4.5rem 0 6rem; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);">
+  <div class="container" style="max-width: 480px;">
+    <div class="card" style="box-shadow: var(--shadow-lg); padding: 2.25rem;">
+      
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div class="brand-icon" style="margin: 0 auto 1.25rem; width: 48px; height: 48px; font-size: 1.4rem;">✚</div>
+        <h2 style="font-size: 1.75rem; margin-bottom: 0.35rem; color: var(--text-main);">MedTrack Access Portal</h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">Sign in to your secure healthcare workspace</p>
+      </div>
+
+      <!-- Role Tabs -->
+      <div style="display: flex; background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 1.75rem;">
+        <button type="button" id="tabPatient" class="btn btn-sm" style="flex: 1; border-radius: 6px; background: var(--primary); color: #fff; font-weight: 700;" onclick="setLoginRole('patient')">
+          Patient Portal
+        </button>
+        <button type="button" id="tabDoctor" class="btn btn-sm" style="flex: 1; border-radius: 6px; background: transparent; color: var(--text-muted); font-weight: 600;" onclick="setLoginRole('doctor')">
+          Doctor / Clinician
+        </button>
+      </div>
+
+      <form action="{{ url_for('login') }}" method="POST" id="loginForm">
+        <input type="hidden" name="role" id="loginRoleInput" value="patient">
+
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input type="email" name="email" id="loginEmail" class="form-control" placeholder="user@domain.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <div style="position: relative;">
+            <input type="password" name="password" id="loginPassword" class="form-control" placeholder="••••••••" required style="padding-right: 2.75rem;">
+            <button type="button" id="togglePasswordBtn" onclick="togglePasswordVisibility()" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1rem;" title="Show/Hide Password">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; margin-bottom: 1.5rem; padding: 0.8rem;">
+          Sign In to Portal &rarr;
+        </button>
+      </form>
+
+      <!-- Demo Autofill Section for Testing -->
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; margin-top: 0.5rem;">
+        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.85rem; text-align: center; font-weight: 700;">
+          Quick 1-Click Evaluation Credentials
+        </div>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button type="button" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.82rem;" onclick="fillPatientDemo()">
+            👤 Patient (Alex)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.82rem;" onclick="fillDoctorDemo()">
+            🩺 Doctor (Dr. Mitchell)
+          </button>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.75rem; font-size: 0.9rem; color: var(--text-muted);">
+        New to MedTrack? <a href="{{ url_for('register') }}" style="font-weight: 700; color: var(--primary);">Create an account</a> • <a href="{{ url_for('index') }}" style="color: var(--text-muted);">Back to Home</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  function setLoginRole(role) {
+    const roleInput = document.getElementById('loginRoleInput');
+    const tabPatient = document.getElementById('tabPatient');
+    const tabDoctor = document.getElementById('tabDoctor');
+    
+    roleInput.value = role;
+    if (role === 'patient') {
+      tabPatient.style.background = 'var(--primary)';
+      tabPatient.style.color = '#fff';
+      tabDoctor.style.background = 'transparent';
+      tabDoctor.style.color = 'var(--text-muted)';
+    } else {
+      tabDoctor.style.background = 'var(--dark)';
+      tabDoctor.style.color = '#fff';
+      tabPatient.style.background = 'transparent';
+      tabPatient.style.color = 'var(--text-muted)';
+    }
+  }
+
+  function fillPatientDemo() {
+    setLoginRole('patient');
+    document.getElementById('loginEmail').value = 'alex.mercer@gmail.com';
+    document.getElementById('loginPassword').value = 'patient123';
+  }
+
+  function fillDoctorDemo() {
+    setLoginRole('doctor');
+    document.getElementById('loginEmail').value = 'sarah.mitchell@medtrack.org';
+    document.getElementById('loginPassword').value = 'doctor123';
+  }
+
+  function togglePasswordVisibility() {
+    const pwd = document.getElementById('loginPassword');
+    const btn = document.getElementById('togglePasswordBtn');
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      btn.textContent = '🙈';
+    } else {
+      pwd.type = 'password';
+      btn.textContent = '👁️';
+    }
+  }
+
+  // Pre-select role if URL has ?role=doctor
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('role') === 'doctor') {
+    setLoginRole('doctor');
+  }
+</script>
+{% endblock %}
